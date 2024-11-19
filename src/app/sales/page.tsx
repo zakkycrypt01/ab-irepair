@@ -4,6 +4,10 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Search, ShoppingCart } from 'lucide-react'
+import lapimage1 from "/public/images/laptop1.jpg"
+import lapimage2 from "/public/images/laptop2.jpg"
+import lapimage3 from "/public/images/laptop3.jpg"
+
 
 const products = [
   { 
@@ -11,7 +15,7 @@ const products = [
     name: "Pro Laptop X1", 
     category: "laptop", 
     price: 999.99, 
-    image: "/placeholder.svg?height=200&width=300",
+    image: lapimage1,
     description: "High-performance laptop with 16GB RAM, 512GB SSD, and the latest Intel Core i7 processor."
   },
   { 
@@ -19,7 +23,7 @@ const products = [
     name: "Ultra Book Y2", 
     category: "laptop", 
     price: 1299.99, 
-    image: "/placeholder.svg?height=200&width=300",
+    image: lapimage2,
     description: "Ultra-thin and light laptop with 4K display, 1TB SSD, and all-day battery life."
   },
   { 
@@ -76,7 +80,7 @@ export default function SalesPage() {
               </svg>
               Back to Main Page
             </Link>
-            <h1 className="text-2xl font-bold">TechFix Solutions Store</h1>
+            <h1 className="text-2xl font-bold">ABTECH iREPAIR Store</h1>
           </div>
           <div className="flex items-center space-x-4">
             <div className="relative">
@@ -148,7 +152,7 @@ export default function SalesPage() {
 
       <footer className="bg-gray-800 py-6 mt-12">
         <div className="container mx-auto px-4 text-center">
-          <p>&copy; 2023 TechFix Solutions. All rights reserved.</p>
+          <p>&copy; 2023 ABTECH iREPAIR. All rights reserved.</p>
         </div>
       </footer>
     </div>

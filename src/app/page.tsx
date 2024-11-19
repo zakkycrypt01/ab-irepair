@@ -5,6 +5,10 @@ import Image from 'next/image'
 import { Phone, MapPin, MessageCircle, Laptop, Smartphone, Cpu, Mail, Clock, Star, Menu, X, Sun, ShoppingBag, Headphones } from 'lucide-react'
 import { useState } from 'react'
 
+import pics1 from "/public/images/placeholder1.jpg"
+import pics2 from "/public/images/placeholder2.jpg"
+
+
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -12,7 +16,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <header className="bg-gray-800 py-4 sticky top-0 z-10">
         <div className="container mx-auto px-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">TechFix Solutions</h1>
+          <h1 className="text-2xl font-bold">ABTECH iREPAIR</h1>
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden" aria-label="Toggle menu">
             {isMenuOpen ? <X /> : <Menu />}
           </button>
@@ -32,18 +36,18 @@ export default function HomePage() {
       <main>
         <section id="home" className="py-12">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-6">Welcome to TechFix Solutions!</h2>
+            <h2 className="text-3xl font-bold mb-6">Welcome to ABTECH iREPAIR!</h2>
             <p className="text-xl mb-8">
               We specialize in expert laptop, phone, and PCB repairs with fast and reliable service. Your gadgets are in safe hands!
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="flex items-center text-blue-400">
                 <Phone className="mr-2" />
-                <span>Call us: +234 812 345 6789</span>
+                <span>Call us: +234 8101765592</span>
               </div>
               <div className="flex items-center text-blue-400">
                 <MapPin className="mr-2" />
-                <span>Visit us: 123 Tech Avenue, Lagos</span>
+                <span>Visit us: Gk M.M Castle,Opp sch new gate Jatapi office Minna Niger State</span>
               </div>
               <div className="flex items-center text-blue-400">
                 <MessageCircle className="mr-2" />
@@ -65,10 +69,10 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
                 <p className="mb-6">
-                  At TechFix Solutions, we have over 5 years of experience in providing top-notch repair services for laptops, phones, and PCB boards. Our mission is to get your devices back to full functionality as quickly as possible, using high-quality parts and advanced tools.
+                  At ABTECH iREPAIR, we have over 5 years of experience in providing top-notch repair services for laptops, phones, and PCB boards. Our mission is to get your devices back to full functionality as quickly as possible, using high-quality parts and advanced tools.
                 </p>
                 <p className="mb-6">
-                  Our team is led by our experienced manager, John Doe, who brings over 10 years of expertise in the tech repair industry.
+                  Our team is led by our experienced manager, Haliru Abdullah, who brings over 10 years of expertise in the tech repair industry.
                 </p>
                 <h3 className="text-2xl font-semibold mb-4">Why Choose Us?</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -109,20 +113,20 @@ export default function HomePage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="relative w-full h-0 pb-[100%] rounded-full overflow-hidden">
                   <Image
-                    src="/placeholder.svg?height=300&width=300"
-                    alt="TechFix Solutions team at work"
-                    layout="fill"
-                    objectFit="cover"
-                    className="absolute inset-0"
+                  src={pics1}
+                  alt="ABTECH iREPAIR team at work"
+                  layout="fill"
+                  objectFit="cover"
+                  className="absolute inset-0"
                   />
                 </div>
                 <div className="relative w-full h-0 pb-[100%] rounded-full overflow-hidden">
                   <Image
-                    src="/placeholder.svg?height=300&width=300"
-                    alt="Our state-of-the-art repair facility"
-                    layout="fill"
-                    objectFit="cover"
-                    className="absolute inset-0"
+                  src={pics2}
+                  alt="Our state-of-the-art repair facility"
+                  layout="fill"
+                  objectFit="cover"
+                  className="absolute inset-0"
                   />
                 </div>
               </div>
@@ -156,7 +160,7 @@ export default function HomePage() {
               </div>
               <div className="bg-gray-800 rounded-lg p-6">
                 <Cpu className="text-blue-400 w-12 h-12 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Dead Device Repair</h3>
+                <h3 className="text-xl font-semibold mb-2">PCB & Motherboard Repair</h3>
                 <ul className="space-y-2">
                   <li>Dead Laptop Revival</li>
                   <li>Dead Phone Recovery</li>
@@ -196,7 +200,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="mt-8 text-center">
-              <a href="#" className="inline-flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+              <a href="https://wa.link/yexqzh" className="inline-flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
                 <MessageCircle className="mr-2" />
                 Need help? Chat on WhatsApp
               </a>
@@ -215,27 +219,27 @@ export default function HomePage() {
                     <h4 className="font-semibold text-blue-400">Main Office:</h4>
                     <div className="flex items-center mt-2">
                       <MapPin className="text-blue-400 mr-2" />
-                      <span>123 Tech Avenue, Lagos</span>
+                      <span>Gk M.M Castle,Opp sch new gate Jatapi office Minna Niger State</span>
                     </div>
                   </div>
                   <div>
                     <h4 className="font-semibold text-blue-400">Branch Office:</h4>
                     <div className="flex items-center mt-2">
                       <MapPin className="text-blue-400 mr-2" />
-                      <span>456 Digital Street, Abuja</span>
+                      <span>Lokoja</span>
                     </div>
                   </div>
                   <div className="flex items-center">
                     <Phone className="text-blue-400 mr-2" />
-                    <span>+234 812 345 6789</span>
+                    <span>+234 8101765592</span>
                   </div>
                   <div className="flex items-center">
                     <MessageCircle className="text-blue-400 mr-2" />
-                    <a href="#" className="text-blue-400 hover:underline">Click here to chat on WhatsApp</a>
+                    <a href="https://wa.link/yexqzh" className="text-blue-400 hover:underline">Click here to chat on WhatsApp</a>
                   </div>
                   <div className="flex items-center">
                     <Mail className="text-blue-400 mr-2" />
-                    <a href="mailto:contact@techfixsolutions.com" className="text-blue-400 hover:underline">contact@techfixsolutions.com</a>
+                    <a href="mailto:contact@abtechirepair.com" className="text-blue-400 hover:underline">contact@techfixsolutions.com</a>
                   </div>
                 </div>
               </div>
@@ -269,7 +273,7 @@ export default function HomePage() {
                   <Star className="text-yellow-400 w-6 h-6" />
                 </div>
                 <p className="mb-4">"Fantastic service! My laptop was fixed within 24 hours."</p>
-                <p className="font-semibold">- John D.</p>
+                <p className="font-semibold">- Haliru A.</p>
               </div>
               <div className="bg-gray-800 rounded-lg p-6">
                 <div className="flex items-center mb-4">
@@ -289,7 +293,7 @@ export default function HomePage() {
 
       <footer className="bg-gray-800 py-6">
         <div className="container mx-auto px-4 text-center">
-          <p>&copy; 2023 TechFix Solutions. All rights reserved.</p>
+          <p>&copy; 2023 ABTECH iREPAIR. All rights reserved.</p>
         </div>
       </footer>
     </div>
