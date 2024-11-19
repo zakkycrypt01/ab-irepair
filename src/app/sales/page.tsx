@@ -6,8 +6,7 @@ import Link from 'next/link'
 import { Search, ShoppingCart } from 'lucide-react'
 import lapimage1 from "/public/images/laptop1.jpg"
 import lapimage2 from "/public/images/laptop2.jpg"
-import lapimage3 from "/public/images/laptop3.jpg"
-
+import access1 from "/public/images/powerbank.jpg"
 
 const products = [
   { 
@@ -26,36 +25,36 @@ const products = [
     image: lapimage2,
     description: "Ultra-thin and light laptop with 4K display, 1TB SSD, and all-day battery life."
   },
-  { 
-    id: 3, 
-    name: "Phone Case Pro", 
-    category: "accessory", 
-    price: 29.99, 
-    image: "/placeholder.svg?height=200&width=200",
-    description: "Durable and stylish phone case with military-grade drop protection."
-  },
-  { 
-    id: 4, 
-    name: "Wireless Earbuds", 
-    category: "accessory", 
-    price: 79.99, 
-    image: "/placeholder.svg?height=200&width=200",
-    description: "True wireless earbuds with active noise cancellation and 24-hour battery life."
-  },
-  { 
-    id: 5, 
-    name: "10000mAh Power Bank", 
-    category: "powerbank", 
-    price: 49.99, 
-    image: "/placeholder.svg?height=200&width=200",
-    description: "Compact 10000mAh power bank with fast charging and dual USB ports."
-  },
+  // { 
+  //   id: 3, 
+  //   name: "Phone Case Pro", 
+  //   category: "accessory", 
+  //   price: 29.99, 
+  //   image: "/placeholder.svg?height=200&width=200",
+  //   description: "Durable and stylish phone case with military-grade drop protection."
+  // },
+  // { 
+  //   id: 4, 
+  //   name: "Wireless Earbuds", 
+  //   category: "accessory", 
+  //   price: 79.99, 
+  //   image: "/placeholder.svg?height=200&width=200",
+  //   description: "True wireless earbuds with active noise cancellation and 24-hour battery life."
+  // },
+  // { 
+  //   id: 5, 
+  //   name: "10000mAh Power Bank", 
+  //   category: "powerbank", 
+  //   price: 49.99, 
+  //   image: "/placeholder.svg?height=200&width=200",
+  //   description: "Compact 10000mAh power bank with fast charging and dual USB ports."
+  // },
   { 
     id: 6, 
     name: "20000mAh Power Bank", 
     category: "powerbank", 
     price: 69.99, 
-    image: "/placeholder.svg?height=200&width=200",
+    image: access1,
     description: "High-capacity 20000mAh power bank with USB-C PD and Qi wireless charging."
   },
 ]
