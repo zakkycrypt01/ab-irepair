@@ -11,19 +11,19 @@ import access1 from "/public/images/powerbank.jpg"
 const products = [
   { 
     id: 1, 
-    name: "Pro Laptop X1", 
+    name: "Elitebook 840 G3", 
     category: "laptop", 
-    price: 999.99, 
+    price: 295000, 
     image: lapimage1,
-    description: "High-performance laptop with 16GB RAM, 512GB SSD, and the latest Intel Core i7 processor."
+    description: "High-performance laptop with 8GB RAM, 256GB SSD, and the latest Intel Core i5 processor."
   },
   { 
     id: 2, 
-    name: "Ultra Book Y2", 
+    name: "Dell Latitude E7240", 
     category: "laptop", 
-    price: 1299.99, 
+    price: 375000.00, 
     image: lapimage2,
-    description: "Ultra-thin and light laptop with 4K display, 1TB SSD, and all-day battery life."
+    description: "Ultra-thin and light laptop with 4K display, 256GB SSD and 8GB RAM, and all-day battery life."
   },
   // { 
   //   id: 3, 
@@ -53,7 +53,7 @@ const products = [
     id: 6, 
     name: "20000mAh Power Bank", 
     category: "powerbank", 
-    price: 69.99, 
+    price: 17000, 
     image: access1,
     description: "High-capacity 20000mAh power bank with USB-C PD and Qi wireless charging."
   },
@@ -138,7 +138,7 @@ export default function SalesPage() {
                 <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
                 <p className="text-gray-400 text-sm mb-4">{product.description}</p>
                 <div className="flex justify-between items-center">
-                  <span className="text-2xl font-bold">${product.price.toFixed(2)}</span>
+                  <span className="text-2xl font-bold"># {product.price.toFixed(2)}</span>
                   <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-150 ease-in-out">
                     Add to Cart
                   </button>
