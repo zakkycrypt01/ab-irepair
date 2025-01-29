@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import type { StaticImageData } from 'next/image'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Search, ShoppingCart ,X} from 'lucide-react'
+import { Search, ShoppingCart, ChevronLeft, X} from 'lucide-react'
 import lapimage1 from "/public/images/laptop1.jpg"
 import lapimage2 from "/public/images/laptop2.jpg"
 import access1 from "/public/images/powerbank.jpg"
@@ -125,9 +125,7 @@ export default function SalesPage() {
         <div className="container mx-auto px-4 flex-col justify-between items-center">
           <div className="flex items-center justify-between mb-3 space-x-4">
             <Link href="/" className="text-gray-300 hover:text-white transition duration-150 ease-in-out flex items-center relative">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
+            <ChevronLeft className="mr-2" />
               Main Page
             </Link>
           </div>
