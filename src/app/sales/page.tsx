@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import type { StaticImageData } from 'next/image'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Search, ShoppingCart } from 'lucide-react'
+import { Search, ShoppingCart ,X} from 'lucide-react'
 import lapimage1 from "/public/images/laptop1.jpg"
 import lapimage2 from "/public/images/laptop2.jpg"
 import access1 from "/public/images/powerbank.jpg"
@@ -62,11 +63,61 @@ const products = [
 export default function SalesPage() {
   const [activeTab, setActiveTab] = useState("all")
   const [searchTerm, setSearchTerm] = useState("")
+  const [cart, setCart] = useState<CartItem[]>([])
+  const [isCartOpen, setIsCartOpen] = useState(false)
 
   const filteredProducts = products.filter(product => 
     (activeTab === "all" || product.category === activeTab) &&
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  interface Product {
+    id: number;
+    name: string;
+    category: string;
+    price: number;
+    image: StaticImageData;
+    description: string;
+  }
+
+  interface CartItem extends Product {
+    quantity: number;
+  }
+
+  const addToCart = (product: Product) => {
+    setCart((prevCart: CartItem[]) => {
+      const existingItem = prevCart.find(item => item.id === product.id)
+      if (existingItem) {
+        return prevCart.map(item => 
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        )
+      } else {
+        return [...prevCart, { ...product, quantity: 1 }]
+      }
+    })
+  }
+
+  const removeFromCart = (productId: number) => {
+    setCart(prevCart => prevCart.filter(item => item.id !== productId))
+  }
+
+  const updateQuantity = (productId: number, quantity: number) => {
+    setCart(prevCart => 
+      prevCart.map(item =>
+        item.id === productId ? { ...item, quantity : quantity } : item
+      )
+    )
+  }
+
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0)
+  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+
+  useEffect(() => {
+    const savedCart = localStorage.getItem("cart")
+    if (savedCart) {
+      setCart(JSON.parse(savedCart))
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
@@ -84,7 +135,10 @@ export default function SalesPage() {
             <h1 className="text-xl font-bold">ABTECH iREPAIR Store</h1>
             <button className="bg-gray-700 p-2 rounded-full hover:bg-gray-600 transition duration-150 ease-in-out">
               <ShoppingCart className="h-5 w-5" />
-              <span className="sr-only">Shopping Cart</span>
+              <span className='sr-only'> Shoppping Cart</span>
+              {totalItems > 0 && (
+                <span className='absolute-top-2-right-2  bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs'> {totalItems} </span>
+              )}
             </button>
           </div>
             <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">        
@@ -143,7 +197,9 @@ export default function SalesPage() {
                 <p className="text-gray-400 text-sm mb-4">{product.description}</p>
                 <div className="flex justify-between items-center">
                   <span className="text-2xl font-bold"># {product.price.toFixed(2)}</span>
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-150 ease-in-out">
+                  <button 
+                  onClick={()=> addToCart(product)}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-150 ease-in-out">
                     Add to Cart
                   </button>
                 </div>
@@ -152,6 +208,72 @@ export default function SalesPage() {
           ))}
         </div>
       </main>
+      <div className="fixed bottom-4 right-4">
+        <button 
+          onClick={() => setIsCartOpen(true)}
+          className="bg-blue-500 text-white p-3 rounded-full hover:bg-blue-600 transition duration-150 ease-in-out"
+        >
+          <ShoppingCart className="h-6 w-6" />
+          {totalItems > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
+              {totalItems}
+            </span>
+          )}
+        </button>
+      </div>
+      {isCartOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
+          <div className="bg-gray-800 w-full max-w-md p-6 overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold">Your Cart</h2>
+              <button onClick={() => setIsCartOpen(false)} className="text-gray-500 hover:text-white">
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            {cart.length === 0 ? (
+              <p>Your cart is empty.</p>
+            ) : (
+              <>
+                {cart.map(item => (
+                  <div key={item.id} className="flex items-center justify-between py-4 border-b border-gray-700">
+                    <div>
+                      <h3 className="font-semibold">{item.name}</h3>
+                      <p className="text-sm text-gray-400">${item.price.toFixed(2)} x {item.quantity}</p>
+                    </div>
+                    <div className="flex items-center">
+                      <button 
+                        onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                        className="px-2 py-1 bg-gray-700 rounded-l"
+                      >
+                        -
+                      </button>
+                      <span className="px-4 py-1 bg-gray-700">{item.quantity}</span>
+                      <button 
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        className="px-2 py-1 bg-gray-700 rounded-r"
+                      >
+                        +
+                      </button>
+                      <button 
+                        onClick={() => removeFromCart(item.id)}
+                        className="ml-2 text-red-500 hover:text-red-600"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                <div className="mt-4">
+                  <p className="text-xl font-bold">Total: ${totalPrice.toFixed(2)}</p>
+                  <Link href="/checkout" className="w-full mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-150 ease-in-out inline-block text-center">
+                    Checkout
+                  </Link>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       <footer className="bg-gray-800 py-6 mt-12">
         <div className="container mx-auto px-4 text-center">
