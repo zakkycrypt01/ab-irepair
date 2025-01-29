@@ -87,13 +87,14 @@ export default function SalesPage() {
               <span className="sr-only">Shopping Cart</span>
             </button>
           </div>
-            <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4">        
-            <div className="relative flex justify-end items-center w-full md:w-auto">
+            <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">        
+            <div className="relative flex justify-end items-center value style = w-400 md:w-auto">
               <input
               type="text"
               placeholder="Search products..."
               className="pl-10 pr-4 py-2 rounded-full bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-64"
               value={searchTerm}
+              style={{width: "400px"}}
               onChange={(e) => setSearchTerm(e.target.value)}
               />
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
