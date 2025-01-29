@@ -133,7 +133,7 @@ export default function SalesPage() {
           </div>
           <div className='flex mb-4 justify-between items-center'>
             <h1 className="text-xl font-bold">ABTECH iREPAIR Store</h1>
-            <button className="bg-gray-700 p-2 rounded-full hover:bg-gray-600 transition duration-150 ease-in-out">
+            <button className="bg-gray-700 p-2 rounded-full hover:bg-gray-600 transition duration-150 ease-in-out relative">
               <ShoppingCart className="h-5 w-5" />
               <span className='sr-only'> Shoppping Cart</span>
               {totalItems > 0 && (
