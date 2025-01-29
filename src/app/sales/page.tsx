@@ -72,7 +72,7 @@ export default function SalesPage() {
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <header className="bg-gray-800 py-4 sticky top-0 z-10">
         <div className="container mx-auto px-4 flex justify-between items-center">
-          <div className="flex items-center space-x-4">
+          <div className="flex-col items-center space-x-4">
             <Link href="/" className="text-gray-300 hover:text-white transition duration-150 ease-in-out flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
