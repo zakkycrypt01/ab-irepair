@@ -124,23 +124,26 @@ export default function SalesPage() {
       <header className="bg-gray-800 py-4 sticky top-0 z-10">
         <div className="container mx-auto px-4 flex-col justify-between items-center">
           <div className="flex items-center justify-between mb-3 space-x-4">
-            <Link href="/" className="text-gray-300 hover:text-white transition duration-150 ease-in-out flex items-center">
+            <Link href="/" className="text-gray-300 hover:text-white transition duration-150 ease-in-out flex items-center relative">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
               Main Page
             </Link>
           </div>
-          <div className='flex mb-4 justify-between items-center'>
+          <div className="flex mb-4 justify-between items-center">
             <h1 className="text-xl font-bold">ABTECH iREPAIR Store</h1>
             <button className="bg-gray-700 p-2 rounded-full hover:bg-gray-600 transition duration-150 ease-in-out relative">
-              <ShoppingCart className="h-5 w-5" />
-              <span className='sr-only'> Shoppping Cart</span>
+            <ShoppingCart className="h-6 w-6 text-white" />
+            <span className="sr-only">Shopping Cart</span>
               {totalItems > 0 && (
-                <span className='absolute-top-2-right-2  bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs'> {totalItems} </span>
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+              {totalItems}
+                </span>
               )}
             </button>
           </div>
+
             <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">        
             <div className="relative flex justify-end items-center value style = w-400 md:w-auto">
               <input
