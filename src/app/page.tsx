@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Phone, MapPin, MessageCircle, Laptop, Smartphone, Cpu, Mail, Clock, Star, Menu, X, Sun, ShoppingBag, Headphones } from 'lucide-react'
+import React from 'react'
 import { useState } from 'react'
 
 import pics1 from "/public/images/placeholder1.jpg"
