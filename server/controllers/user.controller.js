@@ -3,10 +3,10 @@ import Product from '../models/productDB.js';
 
 class UserController{
     static async HttpAddProduct(request, response){
-        const {id, name, category, price, description, image} = request.body;
-        const newProduct = await Product.create({id, name, category, price, description, image});
+        const {productId, name, category, price, description, image} = request.body;
+        const newProduct = await Product.create({productId, name, category, price, description, image});
         const data = {
-            id: newProduct.id,
+            productId: newProduct.productId,
             name: newProduct.name,
             category: newProduct.category,
             price: newProduct.price,
@@ -28,7 +28,7 @@ class UserController{
 
     //delete product by id
     static async HttpDeleteProductById(request, response){
-        await Product.findByIdAndDelete(request.params.id);
+        await Product.findByIdAndDelete(request.params.productId);
         response.status(StatusCodes.NO_CONTENT).send();
     }
 }
