@@ -27,8 +27,9 @@ class UserController{
     }
 
     //delete product by id
-    static async HttpDeleteProductById(request, response){
-        await Product.findByIdAndDelete(request.params.productId);
+    static async HttpDeleteProductByproductId(request, response){
+        const productId = request.params.productId;
+        await Product.findOneAndDelete({productId: productId});
         response.status(StatusCodes.NO_CONTENT).send();
     }
 }

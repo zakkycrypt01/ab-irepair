@@ -6,6 +6,6 @@ userRouter
     .post('/addproduct', UserController.HttpAddProduct)
     .get('/products', UserController.HttpGetAllProducts)
     .get('/products/:name', UserController.HttpGetProductByName)
-    .delete('/products/:productId', UserController.HttpDeleteProductById);
+    .delete('/products/:productId', UserController.HttpDeleteProductByproductId);
 
 export default userRouter;
