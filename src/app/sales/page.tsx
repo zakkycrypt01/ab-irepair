@@ -245,7 +245,7 @@ export default function SalesPage() {
 
       <footer className="bg-gray-800 py-6 mt-12">
         <div className="container mx-auto px-4 text-center">
-          <p>&copy; 2023 ABTECH iREPAIR. All rights reserved.</p>
+          <p>&copy; 2025 ABTECH iREPAIR. All rights reserved.</p>
         </div>
       </footer>
     </div>
