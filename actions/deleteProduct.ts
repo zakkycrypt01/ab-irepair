@@ -1,5 +1,5 @@
 export const deleteProduct = async (productId: string) => {
-    const URL = process.env.NEXT_PUBLIC_API_URL;
+    const URL = process.env.NEXT_PUBLIC_SERVER_URL;
     console.log('Server URL:', URL);
     console.log('Deleting product with ID:', productId);
 

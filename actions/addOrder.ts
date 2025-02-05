@@ -1,8 +1,8 @@
 export const addOrder = async (order: any) => {
-    const URL = process.env.NEXT_PUBLIC_API_URL
+    const URL = process.env.NEXT_PUBLIC_SERVER_URL
     console.log('URL :>> ', URL);
     console.log('adding order :>> ', order);
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/addorder`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/addorder`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
