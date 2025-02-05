@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 export default function CheckoutPage() {
   const router = useRouter()
   interface CartItem {
-    id: number;
+    productId: number;
     name: string;
     price: number;
     quantity: number;
@@ -85,7 +85,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
           <div>
             <h2 className="text-2xl font-semibold mb-4">Your Cart</h2>
             {cart.map(item => (
-              <div key={item.id} className="flex justify-between items-center mb-4 bg-gray-800 p-4 rounded-lg">
+              <div key={item.productId} className="flex justify-between items-center mb-4 bg-gray-800 p-4 rounded-lg">
                 <div>
                   <h3 className="font-semibold">{item.name}</h3>
                   <p className="text-sm text-gray-400">Quantity: {item.quantity}</p>

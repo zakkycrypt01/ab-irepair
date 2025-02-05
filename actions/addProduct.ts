@@ -1,8 +1,8 @@
 export const addProduct = async (updatedProducts:any) => {
-    const URL = process.env.NEXT_PUBLIC_SERVER_URL
+    const URL = process.env.NEXT_PUBLIC_API_URL
     console.log('URL :>> ', URL);
     console.log('adding product :>> ', updatedProducts);
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/addproduct`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/addproduct`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

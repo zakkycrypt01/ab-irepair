@@ -1,5 +1,6 @@
 import {StatusCodes} from 'http-status-codes';
 import Product from '../models/productDB.js';
+import Order from '../models/orderDB.js';
 
 class UserController{
     static async HttpAddProduct(request, response){
@@ -31,6 +32,18 @@ class UserController{
         const productId = request.params.productId;
         await Product.findOneAndDelete({productId: productId});
         response.status(StatusCodes.NO_CONTENT).send();
+    }
+
+    static async HttpsAddOrder(request, response){
+        const {productId, name, price, quantity} = request.body;
+        const newOrder = await Order.create({productId, name, price, quantity});
+        const data = {
+            productId: newOrder.productId,
+            name: newOrder.name,
+            price: newOrder.price,
+            quantity: newOrder.quantity,
+        }
+        response.status(StatusCodes.CREATED).json(data);
     }
 }
 
