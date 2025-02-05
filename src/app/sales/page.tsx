@@ -10,33 +10,6 @@ import lapimage1 from "/public/images/laptop1.jpg"
 import lapimage2 from "/public/images/laptop2.jpg"
 import access1 from "/public/images/powerbank.jpg"
 
-const products = [
-  { 
-    id: 1, 
-    name: "Elitebook 840 G3", 
-    category: "laptop", 
-    price: 295000, 
-    image: lapimage1,
-    description: "High-performance laptop with 8GB RAM, 256GB SSD, and the latest Intel Core i5 processor."
-  },
-  { 
-    id: 2, 
-    name: "Dell Latitude E7240", 
-    category: "laptop", 
-    price: 375000.00, 
-    image: lapimage2,
-    description: "Ultra-thin and light laptop with 4K display, 256GB SSD and 8GB RAM, and all-day battery life."
-  },
-
-  { 
-    id: 6, 
-    name: "20000mAh Power Bank", 
-    category: "powerbank", 
-    price: 17000, 
-    image: access1,
-    description: "High-capacity 20000mAh power bank with USB-C PD and Qi wireless charging."
-  },
-]
 
 export default function SalesPage() {
   const [activeTab, setActiveTab] = useState("all")
@@ -45,14 +18,20 @@ export default function SalesPage() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [products, setProducts] = useState<Product[]>([])
 
-  useEffect(()=> {
-    const getProduct = async () =>{
-      const products = await getAllProduct()
-      console.log(products);
-      setProducts(products)
-    }
-    getProduct()
-  },[])
+  useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const products = await getAllProduct();
+        console.log(products);
+        setProducts(products);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+  
+    getProduct();
+  }, []);
+  
 
   const filteredProducts = products.filter(product => 
     (activeTab === "all" || product.category === activeTab) &&
@@ -60,7 +39,7 @@ export default function SalesPage() {
   )
 
   interface Product {
-    id: number;
+    productId: number;
     name: string;
     category: string;
     price: number;
@@ -74,10 +53,10 @@ export default function SalesPage() {
 
   const addToCart = (product: Product) => {
     setCart((prevCart: CartItem[]) => {
-      const existingItem = prevCart.find(item => item.id === product.id)
+      const existingItem = prevCart.find(item => item.productId === product.productId)
       if (existingItem) {
         return prevCart.map(item => 
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.productId === product.productId ? { ...item, quantity: item.quantity + 1 } : item
         )
       } else {
         return [...prevCart, { ...product, quantity: 1 }]
@@ -86,13 +65,13 @@ export default function SalesPage() {
   }
 
   const removeFromCart = (productId: number) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== productId))
+    setCart(prevCart => prevCart.filter(item => item.productId !== productId))
   }
 
   const updateQuantity = (productId: number, quantity: number) => {
     setCart(prevCart => 
       prevCart.map(item =>
-        item.id === productId ? { ...item, quantity : quantity } : item
+        item.productId === productId ? { ...item, quantity : quantity } : item
       )
     )
   }
@@ -179,7 +158,7 @@ export default function SalesPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProducts.map(product => (
-            <div key={product.id} className="bg-gray-800 rounded-lg overflow-hidden shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl">
+            <div key={product.productId} className="bg-gray-800 rounded-lg overflow-hidden shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl">
               <Image src={product.image} alt={product.name} width={300} height={200} className="w-full h-48 object-cover" />
               <div className="p-4">
                 <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
@@ -224,27 +203,27 @@ export default function SalesPage() {
             ) : (
               <>
                 {cart.map(item => (
-                  <div key={item.id} className="flex items-center justify-between py-4 border-b border-gray-700">
+                  <div key={item.productId} className="flex items-center justify-between py-4 border-b border-gray-700">
                     <div>
                       <h3 className="font-semibold">{item.name}</h3>
                       <p className="text-sm text-gray-400">${item.price.toFixed(2)} x {item.quantity}</p>
                     </div>
                     <div className="flex items-center">
                       <button 
-                        onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                        onClick={() => updateQuantity(item.productId, Math.max(1, item.quantity - 1))}
                         className="px-2 py-1 bg-gray-700 rounded-l"
                       >
                         -
                       </button>
                       <span className="px-4 py-1 bg-gray-700">{item.quantity}</span>
                       <button 
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                         className="px-2 py-1 bg-gray-700 rounded-r"
                       >
                         +
                       </button>
                       <button 
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => removeFromCart(item.productId)}
                         className="ml-2 text-red-500 hover:text-red-600"
                       >
                         Remove
