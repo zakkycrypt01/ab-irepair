@@ -14,6 +14,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
+  name="google-site-verification" 
+  content="2uEe7jhmcA_1pSegxuZMGvAcc6wIMX3gE5EoQ4ce41o"
   title: "ABTECH iREPAIR",
   description: "ABTECH iREPAIR",
 };
