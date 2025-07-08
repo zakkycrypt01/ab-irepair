@@ -2,6 +2,17 @@ import {Router} from 'express';
 import UserController from '../controllers/user.controller.js';
 import { get } from 'http';
 const userRouter = Router();
+
+// Health check endpoint
+userRouter.get('/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'OK', 
+        message: 'Server is running',
+        timestamp: new Date().toISOString(),
+        cors: 'enabled'
+    });
+});
+
 userRouter
     .post('/addproduct', UserController.HttpAddProduct)
     .post('/addorder', UserController.HttpsAddOrder)
