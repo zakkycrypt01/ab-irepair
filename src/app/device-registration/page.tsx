@@ -37,68 +37,98 @@ export default function DeviceRegistrationPage() {
   const generatePDF = (data: typeof formData) => {
     const doc = new jsPDF()
     
-    // Set up the document
-    doc.setFontSize(20)
+    // Colors
+    const primaryBlue = [37, 99, 235] // Blue-600
+    const lightBlue = [147, 197, 253] // Blue-300
+    const darkGray = [51, 65, 85] // Slate-700
+    const lightGray = [148, 163, 184] // Slate-400
+    const successGreen = [34, 197, 94] // Green-500
+    const warningOrange = [251, 146, 60] // Orange-400
+    
+    // Header Background
+    doc.setFillColor(primaryBlue[0], primaryBlue[1], primaryBlue[2])
+    doc.rect(0, 0, 210, 35, 'F')
+    
+    // Company Logo/Icon (simplified phone icon)
+    doc.setFillColor(255, 255, 255)
+    doc.rect(15, 8, 12, 18, 'F')
+    doc.setFillColor(primaryBlue[0], primaryBlue[1], primaryBlue[2])
+    doc.rect(17, 10, 8, 12, 'F')
+    doc.setFillColor(255, 255, 255)
+    doc.circle(21, 16, 2, 'F')
+    
+    // Header Title
+    doc.setTextColor(255, 255, 255)
+    doc.setFontSize(24)
     doc.setFont('helvetica', 'bold')
-    doc.text('ABTECH - Phone Repair Agreement Slip', 105, 20, { align: 'center' })
+    doc.text('ABTECH', 35, 20)
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'normal')
+    doc.text('Phone Repair Agreement Slip', 35, 28)
     
-    // Add a line separator
-    doc.setLineWidth(0.5)
-    doc.line(20, 25, 190, 25)
+    // Document ID and Date
+    doc.setFontSize(10)
+    doc.text(`Doc ID: ${Date.now().toString().slice(-8)}`, 150, 15)
+    doc.text(`Generated: ${new Date().toLocaleDateString()}`, 150, 25)
     
-    let yPosition = 40
+    let yPosition = 50
+    
+    // Helper function for section headers
+    const addSectionHeader = (title: string, color: number[]) => {
+      doc.setFillColor(color[0], color[1], color[2])
+      doc.rect(15, yPosition - 3, 180, 12, 'F')
+      doc.setTextColor(255, 255, 255)
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'bold')
+      doc.text(title, 20, yPosition + 5)
+      yPosition += 20
+    }
+    
+    // Helper function for field rows
+    const addField = (label: string, value: string, isRequired = false) => {
+      doc.setTextColor(darkGray[0], darkGray[1], darkGray[2])
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      
+      if (isRequired) {
+        doc.setTextColor(220, 38, 38) // Red for required
+        doc.text('*', 20, yPosition)
+        doc.setTextColor(darkGray[0], darkGray[1], darkGray[2])
+        doc.text(label, 25, yPosition)
+      } else {
+        doc.text(label, 20, yPosition)
+      }
+      
+      doc.setFont('helvetica', 'normal')
+      doc.setTextColor(0, 0, 0)
+      doc.text(value || 'Not provided', 80, yPosition)
+      yPosition += 8
+    }
     
     // Customer Information Section
-    doc.setFontSize(14)
-    doc.setFont('helvetica', 'bold')
-    doc.text('Customer Information:', 20, yPosition)
-    yPosition += 10
-    
-    doc.setFontSize(10)
-    doc.setFont('helvetica', 'normal')
-    doc.text(`Name: ${data.ownerName}`, 20, yPosition)
-    yPosition += 6
-    doc.text(`Phone: ${data.ownerPhone}`, 20, yPosition)
-    yPosition += 6
-    doc.text(`Date: ${data.date}`, 20, yPosition)
-    yPosition += 15
+    addSectionHeader('Customer Information', primaryBlue)
+    addField('Full Name:', data.ownerName, true)
+    addField('Phone Number:', data.ownerPhone, true)
+    addField('Registration Date:', data.date, true)
+    yPosition += 5
     
     // Device Information Section
-    doc.setFontSize(14)
-    doc.setFont('helvetica', 'bold')
-    doc.text('Device Information:', 20, yPosition)
-    yPosition += 10
-    
-    doc.setFontSize(10)
-    doc.setFont('helvetica', 'normal')
-    doc.text(`Brand: ${data.phoneBrand}`, 20, yPosition)
-    yPosition += 6
-    doc.text(`Model: ${data.phoneModel}`, 20, yPosition)
-    yPosition += 6
-    doc.text(`Serial Number: ${data.phoneSerialNumber || 'Not provided'}`, 20, yPosition)
-    yPosition += 6
-    doc.text(`Color: ${data.phoneColor || 'Not provided'}`, 20, yPosition)
-    yPosition += 15
+    addSectionHeader('Device Information', lightBlue)
+    addField('Brand:', data.phoneBrand, true)
+    addField('Model:', data.phoneModel, true)
+    addField('Serial Number:', data.phoneSerialNumber)
+    addField('Color:', data.phoneColor)
+    yPosition += 5
     
     // Battery Information Section
-    doc.setFontSize(14)
-    doc.setFont('helvetica', 'bold')
-    doc.text('Battery Information:', 20, yPosition)
-    yPosition += 10
-    
-    doc.setFontSize(10)
-    doc.setFont('helvetica', 'normal')
-    doc.text(`Type: ${data.phoneBatteryType || 'Not provided'}`, 20, yPosition)
-    yPosition += 6
-    doc.text(`Brand: ${data.phoneBatteryBrand || 'Not provided'}`, 20, yPosition)
-    yPosition += 15
+    addSectionHeader('Battery Information', successGreen)
+    addField('Battery Type:', data.phoneBatteryType)
+    addField('Battery Brand:', data.phoneBatteryBrand)
+    yPosition += 5
     
     // Problem Description Section
-    doc.setFontSize(14)
-    doc.setFont('helvetica', 'bold')
-    doc.text('Problem Description:', 20, yPosition)
-    yPosition += 10
-    
+    addSectionHeader('Problem Description', warningOrange)
+    doc.setTextColor(0, 0, 0)
     doc.setFontSize(10)
     doc.setFont('helvetica', 'normal')
     const problemLines = doc.splitTextToSize(data.phoneProblem, 170)
@@ -106,13 +136,12 @@ export default function DeviceRegistrationPage() {
     yPosition += problemLines.length * 6 + 15
     
     // Terms and Conditions Section
-    doc.setFontSize(14)
-    doc.setFont('helvetica', 'bold')
-    doc.text('Terms and Conditions:', 20, yPosition)
-    yPosition += 10
+    addSectionHeader('Terms and Conditions', darkGray)
     
+    doc.setTextColor(0, 0, 0)
     doc.setFontSize(9)
     doc.setFont('helvetica', 'normal')
+    
     const terms = [
       '1. We charge 1,000 naira for checking the phone problem and is non-refundable.',
       '2. It will take us approximately three working days to check the phone and give you result.',
@@ -123,32 +152,61 @@ export default function DeviceRegistrationPage() {
       '7. We will call you when we are done. We will refund your money if we cannot fix the phone.'
     ]
     
-    terms.forEach(term => {
+    terms.forEach((term, index) => {
+      // Alternate background colors for better readability
+      if (index % 2 === 0) {
+        doc.setFillColor(248, 250, 252) // Very light gray
+        doc.rect(15, yPosition - 2, 180, 8, 'F')
+      }
+      
       const termLines = doc.splitTextToSize(term, 170)
-      doc.text(termLines, 20, yPosition)
-      yPosition += termLines.length * 5 + 3
+      doc.text(termLines, 20, yPosition + 2)
+      yPosition += Math.max(termLines.length * 4, 8) + 2
     })
     
     yPosition += 10
     
-    doc.setFontSize(14)
+    // Signatures Section
+    addSectionHeader('Digital Signatures', primaryBlue)
+    
+    // Customer signature box
+    doc.setDrawColor(lightGray[0], lightGray[1], lightGray[2])
+    doc.setFillColor(250, 250, 250)
+    doc.rect(20, yPosition, 80, 20, 'FD')
+    doc.setTextColor(darkGray[0], darkGray[1], darkGray[2])
+    doc.setFontSize(8)
+    doc.text('Customer Signature:', 22, yPosition - 2)
+    doc.setFontSize(12)
     doc.setFont('helvetica', 'bold')
-    doc.text('Signatures:', 20, yPosition)
-    yPosition += 15
+    doc.setTextColor(0, 0, 0)
+    doc.text(data.customerSignature, 22, yPosition + 12)
     
-    doc.setFontSize(10)
-    doc.setFont('helvetica', 'normal')
-    doc.text(`Customer: ${data.customerSignature}`, 20, yPosition)
-    doc.text('Technician: ABTECH', 120, yPosition)
+    // Technician signature box
+    doc.setFillColor(primaryBlue[0], primaryBlue[1], primaryBlue[2])
+    doc.rect(110, yPosition, 80, 20, 'FD')
+    doc.setTextColor(255, 255, 255)
+    doc.setFontSize(8)
+    doc.text('Technician Signature:', 112, yPosition - 2)
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'bold')
+    doc.text('ABTECH', 112, yPosition + 12)
     
-    yPosition += 20
+    yPosition += 35
+    
+    // Footer
+    doc.setFillColor(248, 250, 252)
+    doc.rect(0, yPosition, 210, 20, 'F')
+    doc.setTextColor(lightGray[0], lightGray[1], lightGray[2])
     doc.setFontSize(8)
     doc.setFont('helvetica', 'italic')
-    doc.text('Customer agrees to all terms and conditions stated above.', 105, yPosition, { align: 'center' })
+    doc.text('Customer agrees to all terms and conditions stated above.', 105, yPosition + 8, { align: 'center' })
+    doc.text('This document was digitally generated and is legally binding.', 105, yPosition + 15, { align: 'center' })
     
+    // Generate filename with timestamp
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)
     const filename = `ABTECH_Repair_Agreement_${data.ownerName.replace(/\s+/g, '_')}_${timestamp}.pdf`
     
+    // Save the PDF
     doc.save(filename)
   }
 
@@ -221,11 +279,12 @@ ${data.phoneProblem}
       return
     }
 
+    // Store reference to the form and button
+    const form = e.currentTarget
+    const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement
+    
     try {
-      // Show loading state - use a more reliable way to find the button
-      const form = e.currentTarget
-      const submitButton = form?.querySelector('button[type="submit"]') as HTMLButtonElement
-      
+      // Show loading state
       if (submitButton) {
         submitButton.disabled = true
         submitButton.textContent = 'Sending...'
@@ -258,14 +317,11 @@ ${data.phoneProblem}
       console.error('Submission error:', error)
       alert("An error occurred. Please try again or contact ABTECH directly.")
     } finally {
-      // Reset button state - use a more reliable method
-      setTimeout(() => {
-        const submitButton = document.querySelector('button[type="submit"]') as HTMLButtonElement
-        if (submitButton) {
-          submitButton.disabled = false
-          submitButton.innerHTML = '<svg class="mr-2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14,2 14,8 20,8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10,9 9,9 8,9"></polyline></svg>Submit Registration'
-        }
-      }, 100)
+      // Reset button state
+      if (submitButton) {
+        submitButton.disabled = false
+        submitButton.innerHTML = '<svg class="mr-2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14,2 14,8 20,8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10,9 9,9 8,9"></polyline></svg>Submit Registration'
+      }
     }
   }
 
