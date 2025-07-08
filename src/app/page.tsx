@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Phone, MapPin, MessageCircle, Laptop, Smartphone, Cpu, Mail, Clock, Star, Menu, X, Sun, ShoppingBag, Headphones } from 'lucide-react'
+import { Phone, MapPin, MessageCircle, Laptop, Smartphone, Cpu, Mail, Clock, Star, Menu, X, Sun, ShoppingBag, Headphones, FileText } from 'lucide-react'
 import { useState } from 'react'
 
 import pics1 from "/public/images/placeholder1.jpg"
@@ -55,10 +55,16 @@ export default function HomePage() {
               </div>
             </div>
             <div className="mt-8 text-center">
-              <Link href="/sales" className="inline-flex items-center bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300">
-                <ShoppingBag className="mr-2" />
-                Shop Now
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/sales" className="inline-flex items-center bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300">
+                  <ShoppingBag className="mr-2" />
+                  Shop Now
+                </Link>
+                <Link href="/device-registration" className="inline-flex items-center bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition duration-300">
+                  <FileText className="mr-2" />
+                  Register Device
+                </Link>
+              </div>
             </div>
           </div>
         </section>
