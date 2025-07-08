@@ -46,6 +46,21 @@ const corsOptions = {
 
 const app = express();
 
+// Request logging middleware
+app.use((req, res, next) => {
+    console.log('\n--- Incoming Request ---');
+    console.log(`${req.method} ${req.url}`);
+    console.log('Headers:', {
+        origin: req.headers.origin,
+        'user-agent': req.headers['user-agent'],
+        'content-type': req.headers['content-type'],
+        'access-control-request-method': req.headers['access-control-request-method'],
+        'access-control-request-headers': req.headers['access-control-request-headers']
+    });
+    console.log('----------------------\n');
+    next();
+});
+
 // Manual CORS headers as fallback
 app.use((req, res, next) => {
     const origin = req.headers.origin;
