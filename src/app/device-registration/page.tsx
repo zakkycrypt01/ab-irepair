@@ -37,108 +37,69 @@ export default function DeviceRegistrationPage() {
   const generatePDF = (data: typeof formData) => {
     const doc = new jsPDF()
     
-    // Colors
-    const primaryBlue = [37, 99, 235] // Blue-600
-    const lightBlue = [147, 197, 253] // Blue-300
-    const darkGray = [51, 65, 85] // Slate-700
-    const lightGray = [148, 163, 184] // Slate-400
-    const successGreen = [34, 197, 94] // Green-500
-    const warningOrange = [251, 146, 60] // Orange-400
+    let yPosition = 20
     
-    // Header Background
-    doc.setFillColor(primaryBlue[0], primaryBlue[1], primaryBlue[2])
-    doc.rect(0, 0, 210, 35, 'F')
-    
-    // Company Logo/Icon (simplified phone icon)
-    doc.setFillColor(255, 255, 255)
-    doc.rect(15, 8, 12, 18, 'F')
-    doc.setFillColor(primaryBlue[0], primaryBlue[1], primaryBlue[2])
-    doc.rect(17, 10, 8, 12, 'F')
-    doc.setFillColor(255, 255, 255)
-    doc.circle(21, 16, 2, 'F')
-    
-    // Header Title
-    doc.setTextColor(255, 255, 255)
-    doc.setFontSize(24)
+    // Simple header
+    doc.setTextColor(0, 0, 0)
+    doc.setFontSize(18)
     doc.setFont('helvetica', 'bold')
-    doc.text('ABTECH', 35, 20)
-    doc.setFontSize(14)
-    doc.setFont('helvetica', 'normal')
-    doc.text('Phone Repair Agreement Slip', 35, 28)
+    doc.text('ABTECH - Phone Repair Agreement', 20, yPosition)
+    yPosition += 15
     
-    // Document ID and Date
+    // Document info
     doc.setFontSize(10)
-    doc.text(`Doc ID: ${Date.now().toString().slice(-8)}`, 150, 15)
-    doc.text(`Generated: ${new Date().toLocaleDateString()}`, 150, 25)
+    doc.setFont('helvetica', 'normal')
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, yPosition)
+    doc.text(`ID: ${Date.now().toString().slice(-8)}`, 150, yPosition)
+    yPosition += 20
     
-    let yPosition = 50
-    
-    // Helper function for section headers
-    const addSectionHeader = (title: string, color: number[]) => {
-      doc.setFillColor(color[0], color[1], color[2])
-      doc.rect(15, yPosition - 3, 180, 12, 'F')
-      doc.setTextColor(255, 255, 255)
-      doc.setFontSize(12)
-      doc.setFont('helvetica', 'bold')
-      doc.text(title, 20, yPosition + 5)
-      yPosition += 20
-    }
-    
-    // Helper function for field rows
-    const addField = (label: string, value: string, isRequired = false) => {
-      doc.setTextColor(darkGray[0], darkGray[1], darkGray[2])
+    // Helper function for simple field rows
+    const addField = (label: string, value: string) => {
       doc.setFontSize(10)
       doc.setFont('helvetica', 'bold')
-      
-      if (isRequired) {
-        doc.setTextColor(220, 38, 38) // Red for required
-        doc.text('*', 20, yPosition)
-        doc.setTextColor(darkGray[0], darkGray[1], darkGray[2])
-        doc.text(label, 25, yPosition)
-      } else {
-        doc.text(label, 20, yPosition)
-      }
-      
+      doc.text(label, 20, yPosition)
       doc.setFont('helvetica', 'normal')
-      doc.setTextColor(0, 0, 0)
       doc.text(value || 'Not provided', 80, yPosition)
       yPosition += 8
     }
     
-    // Customer Information Section
-    addSectionHeader('Customer Information', primaryBlue)
-    addField('Full Name:', data.ownerName, true)
-    addField('Phone Number:', data.ownerPhone, true)
-    addField('Registration Date:', data.date, true)
-    yPosition += 5
+    // Helper function for section headers
+    const addSectionHeader = (title: string) => {
+      yPosition += 5
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'bold')
+      doc.text(title, 20, yPosition)
+      yPosition += 10
+    }
     
-    // Device Information Section
-    addSectionHeader('Device Information', lightBlue)
-    addField('Brand:', data.phoneBrand, true)
-    addField('Model:', data.phoneModel, true)
+    // Customer Information
+    addSectionHeader('Customer Information')
+    addField('Name:', data.ownerName)
+    addField('Phone:', data.ownerPhone)
+    addField('Date:', data.date)
+    
+    // Device Information
+    addSectionHeader('Device Information')
+    addField('Brand:', data.phoneBrand)
+    addField('Model:', data.phoneModel)
     addField('Serial Number:', data.phoneSerialNumber)
     addField('Color:', data.phoneColor)
-    yPosition += 5
     
-    // Battery Information Section
-    addSectionHeader('Battery Information', successGreen)
-    addField('Battery Type:', data.phoneBatteryType)
-    addField('Battery Brand:', data.phoneBatteryBrand)
-    yPosition += 5
+    // Battery Information
+    addSectionHeader('Battery Information')
+    addField('Type:', data.phoneBatteryType)
+    addField('Brand:', data.phoneBatteryBrand)
     
-    // Problem Description Section
-    addSectionHeader('Problem Description', warningOrange)
-    doc.setTextColor(0, 0, 0)
+    // Problem Description
+    addSectionHeader('Problem Description')
     doc.setFontSize(10)
     doc.setFont('helvetica', 'normal')
     const problemLines = doc.splitTextToSize(data.phoneProblem, 170)
     doc.text(problemLines, 20, yPosition)
-    yPosition += problemLines.length * 6 + 15
+    yPosition += problemLines.length * 6 + 10
     
-    // Terms and Conditions Section
-    addSectionHeader('Terms and Conditions', darkGray)
-    
-    doc.setTextColor(0, 0, 0)
+    // Terms and Conditions
+    addSectionHeader('Terms and Conditions')
     doc.setFontSize(9)
     doc.setFont('helvetica', 'normal')
     
@@ -152,57 +113,35 @@ export default function DeviceRegistrationPage() {
       '7. We will call you when we are done. We will refund your money if we cannot fix the phone.'
     ]
     
-    terms.forEach((term, index) => {
-      // Alternate background colors for better readability
-      if (index % 2 === 0) {
-        doc.setFillColor(248, 250, 252) // Very light gray
-        doc.rect(15, yPosition - 2, 180, 8, 'F')
-      }
-      
+    terms.forEach((term) => {
       const termLines = doc.splitTextToSize(term, 170)
-      doc.text(termLines, 20, yPosition + 2)
-      yPosition += Math.max(termLines.length * 4, 8) + 2
+      doc.text(termLines, 20, yPosition)
+      yPosition += termLines.length * 5 + 3
     })
     
     yPosition += 10
     
-    // Signatures Section
-    addSectionHeader('Digital Signatures', primaryBlue)
+    // Signatures
+    addSectionHeader('Signatures')
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
     
-    // Customer signature box
-    doc.setDrawColor(lightGray[0], lightGray[1], lightGray[2])
-    doc.setFillColor(250, 250, 250)
-    doc.rect(20, yPosition, 80, 20, 'FD')
-    doc.setTextColor(darkGray[0], darkGray[1], darkGray[2])
-    doc.setFontSize(8)
-    doc.text('Customer Signature:', 22, yPosition - 2)
-    doc.setFontSize(12)
-    doc.setFont('helvetica', 'bold')
-    doc.setTextColor(0, 0, 0)
-    doc.text(data.customerSignature, 22, yPosition + 12)
+    // Customer signature
+    doc.text('Customer:', 20, yPosition)
+    doc.text(data.customerSignature, 60, yPosition)
+    yPosition += 10
     
-    // Technician signature box
-    doc.setFillColor(primaryBlue[0], primaryBlue[1], primaryBlue[2])
-    doc.rect(110, yPosition, 80, 20, 'FD')
-    doc.setTextColor(255, 255, 255)
-    doc.setFontSize(8)
-    doc.text('Technician Signature:', 112, yPosition - 2)
-    doc.setFontSize(12)
-    doc.setFont('helvetica', 'bold')
-    doc.text('ABTECH', 112, yPosition + 12)
-    
-    yPosition += 35
+    // Technician signature
+    doc.text('Technician:', 20, yPosition)
+    doc.text('ABTECH', 60, yPosition)
+    yPosition += 15
     
     // Footer
-    doc.setFillColor(248, 250, 252)
-    doc.rect(0, yPosition, 210, 20, 'F')
-    doc.setTextColor(lightGray[0], lightGray[1], lightGray[2])
     doc.setFontSize(8)
     doc.setFont('helvetica', 'italic')
-    doc.text('Customer agrees to all terms and conditions stated above.', 105, yPosition + 8, { align: 'center' })
-    doc.text('This document was digitally generated and is legally binding.', 105, yPosition + 15, { align: 'center' })
+    doc.text('This document was digitally generated and is legally binding.', 105, yPosition, { align: 'center' })
     
-    // Generate filename with timestamp
+    // Generate filename
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)
     const filename = `ABTECH_Repair_Agreement_${data.ownerName.replace(/\s+/g, '_')}_${timestamp}.pdf`
     
