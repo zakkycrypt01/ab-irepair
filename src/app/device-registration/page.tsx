@@ -37,131 +37,69 @@ export default function DeviceRegistrationPage() {
   const generatePDF = (data: typeof formData) => {
     const doc = new jsPDF()
     
-    // Modern color palette
-    const colors = {
-      primary: [59, 130, 246],     // Blue-500
-      secondary: [139, 69, 19],    // Brown-600
-      accent: [16, 185, 129],      // Emerald-500
-      warning: [245, 158, 11],     // Amber-500
-      text: [31, 41, 55],          // Gray-800
-      lightBg: [249, 250, 251],    // Gray-50
-      border: [209, 213, 219]      // Gray-300
-    }
+    let yPosition = 20
     
-    let yPosition = 15
-    
-    // Modern header with gradient-like effect
-    doc.setFillColor(colors.primary[0], colors.primary[1], colors.primary[2])
-    doc.rect(0, 0, 210, 40, 'F')
-    
-    // Header accent line
-    doc.setFillColor(colors.accent[0], colors.accent[1], colors.accent[2])
-    doc.rect(0, 35, 210, 5, 'F')
-    
-    // Company name
-    doc.setTextColor(255, 255, 255)
-    doc.setFontSize(22)
+    // Simple header
+    doc.setTextColor(0, 0, 0)
+    doc.setFontSize(18)
     doc.setFont('helvetica', 'bold')
-    doc.text('ABTECH', 20, 25)
+    doc.text('ABTECH - Phone Repair Agreement', 20, yPosition)
+    yPosition += 15
     
-    // Subtitle
-    doc.setFontSize(12)
-    doc.setFont('helvetica', 'normal')
-    doc.text('Phone Repair Agreement', 20, 32)
-    
-    // Document info with modern styling
-    yPosition = 55
-    doc.setFillColor(colors.lightBg[0], colors.lightBg[1], colors.lightBg[2])
-    doc.rect(15, yPosition - 5, 180, 12, 'F')
-    
-    doc.setTextColor(colors.text[0], colors.text[1], colors.text[2])
+    // Document info
     doc.setFontSize(10)
     doc.setFont('helvetica', 'normal')
     doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, yPosition)
-    doc.text(`Document ID: ${Date.now().toString().slice(-8)}`, 150, yPosition)
-    yPosition += 20
+    doc.text(`ID: ${Date.now().toString().slice(-8)}`, 150, yPosition)
+    yPosition += 12
     
-    // Helper function for colorful field rows
+    // Helper function for simple field rows
     const addField = (label: string, value: string) => {
-      // Alternating row background
-      if (yPosition % 20 < 10) {
-        doc.setFillColor(colors.lightBg[0], colors.lightBg[1], colors.lightBg[2])
-        doc.rect(15, yPosition - 3, 180, 8, 'F')
-      }
-      
-      doc.setTextColor(colors.primary[0], colors.primary[1], colors.primary[2])
       doc.setFontSize(10)
       doc.setFont('helvetica', 'bold')
       doc.text(label, 20, yPosition)
-      
-      doc.setTextColor(colors.text[0], colors.text[1], colors.text[2])
       doc.setFont('helvetica', 'normal')
       doc.text(value || 'Not provided', 80, yPosition)
-      yPosition += 6
+      yPosition += 5
     }
     
-    // Helper function for colorful section headers
-    const addSectionHeader = (title: string, color: number[] = colors.primary) => {
-      yPosition += 5
-      
-      // Modern section header with colored background
-      doc.setFillColor(color[0], color[1], color[2])
-      doc.rect(15, yPosition - 4, 180, 14, 'F')
-      
-      // Left accent line
-      doc.setFillColor(colors.accent[0], colors.accent[1], colors.accent[2])
-      doc.rect(15, yPosition - 4, 4, 14, 'F')
-      
-      doc.setTextColor(255, 255, 255)
+    // Helper function for section headers
+    const addSectionHeader = (title: string) => {
+      yPosition += 3
       doc.setFontSize(12)
       doc.setFont('helvetica', 'bold')
-      doc.text(title, 25, yPosition + 3)
-      yPosition += 18
+      doc.text(title, 20, yPosition)
+      yPosition += 7
     }
     
     // Customer Information
-    addSectionHeader('👤 Customer Information', colors.primary)
+    addSectionHeader('Customer Information')
     addField('Name:', data.ownerName)
     addField('Phone:', data.ownerPhone)
     addField('Date:', data.date)
     
     // Device Information
-    addSectionHeader('📱 Device Information', colors.secondary)
+    addSectionHeader('Device Information')
     addField('Brand:', data.phoneBrand)
     addField('Model:', data.phoneModel)
     addField('Serial Number:', data.phoneSerialNumber)
     addField('Color:', data.phoneColor)
     
     // Battery Information
-    addSectionHeader('🔋 Battery Information', colors.accent)
+    addSectionHeader('Battery Information')
     addField('Type:', data.phoneBatteryType)
     addField('Brand:', data.phoneBatteryBrand)
     
     // Problem Description
-    addSectionHeader('⚠️ Problem Description', colors.warning)
-    doc.setFillColor(colors.lightBg[0], colors.lightBg[1], colors.lightBg[2])
-    doc.rect(15, yPosition - 3, 180, (data.phoneProblem.length / 35) * 4 + 10, 'F')
-    
-    doc.setTextColor(colors.text[0], colors.text[1], colors.text[2])
+    addSectionHeader('Problem Description')
     doc.setFontSize(10)
     doc.setFont('helvetica', 'normal')
     const problemLines = doc.splitTextToSize(data.phoneProblem, 170)
     doc.text(problemLines, 20, yPosition)
-    yPosition += problemLines.length * 4 + 10
+    yPosition += problemLines.length * 4 + 5
     
     // Terms and Conditions
-    addSectionHeader('📋 Terms and Conditions', [220, 38, 38])
-    
-    // Terms background
-    doc.setFillColor(255, 252, 252)
-    doc.rect(15, yPosition - 3, 180, 60, 'F')
-    
-    // Warning border
-    doc.setDrawColor(220, 38, 38)
-    doc.setLineWidth(2)
-    doc.rect(15, yPosition - 3, 180, 60)
-    
-    doc.setTextColor(colors.text[0], colors.text[1], colors.text[2])
+    addSectionHeader('Terms and Conditions')
     doc.setFontSize(9)
     doc.setFont('helvetica', 'normal')
     
@@ -170,70 +108,38 @@ export default function DeviceRegistrationPage() {
       '2. It will take us approximately three working days to check the phone and give you result.',
       '3. After checking the phone, we will notify you about the phone, and you must make payment before we work on the phone.',
       '4. We do not have any phone component here example IC, PCB etc so it will take a long time for you to get the phone.',
-      '5. It may take four weeks or less for us to finish the repair.',
+      '5. It may take four weeks or less for us to finish the repair, Please bear with us .',
       '6. On no account should you call us everyday disturbing us about the phone.',
       '7. We will call you when we are done. We will refund your money if we cannot fix the phone.'
     ]
     
-    terms.forEach((term, index) => {
-      // Number highlighting
-      doc.setTextColor(220, 38, 38)
-      doc.setFont('helvetica', 'bold')
-      doc.text(`${index + 1}.`, 20, yPosition)
-      
-      doc.setTextColor(colors.text[0], colors.text[1], colors.text[2])
-      doc.setFont('helvetica', 'normal')
-      const termLines = doc.splitTextToSize(term.substring(2), 165)
-      doc.text(termLines, 27, yPosition)
+    terms.forEach((term) => {
+      const termLines = doc.splitTextToSize(term, 170)
+      doc.text(termLines, 20, yPosition)
       yPosition += termLines.length * 4 + 2
     })
     
-    yPosition += 8
+    yPosition += 5
     
     // Signatures
-    addSectionHeader('✍️ Digital Signatures', colors.accent)
-    
-    // Modern signature boxes
-    // Customer signature box
-    doc.setFillColor(colors.lightBg[0], colors.lightBg[1], colors.lightBg[2])
-    doc.rect(20, yPosition, 80, 16, 'F')
-    doc.setDrawColor(colors.primary[0], colors.primary[1], colors.primary[2])
-    doc.setLineWidth(1)
-    doc.rect(20, yPosition, 80, 16)
-    
-    doc.setTextColor(colors.primary[0], colors.primary[1], colors.primary[2])
-    doc.setFontSize(8)
-    doc.setFont('helvetica', 'bold')
-    doc.text('CUSTOMER SIGNATURE', 22, yPosition - 2)
-    
-    doc.setTextColor(colors.text[0], colors.text[1], colors.text[2])
-    doc.setFontSize(11)
+    addSectionHeader('Signatures')
+    doc.setFontSize(10)
     doc.setFont('helvetica', 'normal')
-    doc.text(data.customerSignature, 25, yPosition + 10)
     
-    // Technician signature box
-    doc.setFillColor(colors.accent[0], colors.accent[1], colors.accent[2])
-    doc.rect(110, yPosition, 80, 16, 'F')
+    // Customer signature
+    doc.text('Customer:', 20, yPosition)
+    doc.text(data.customerSignature, 60, yPosition)
+    yPosition += 7
     
-    doc.setTextColor(255, 255, 255)
-    doc.setFontSize(8)
-    doc.setFont('helvetica', 'bold')
-    doc.text('TECHNICIAN SIGNATURE', 112, yPosition - 2)
+    // Technician signature
+    doc.text('Technician:', 20, yPosition)
+    doc.text('ABTECH', 60, yPosition)
+    yPosition += 10
     
-    doc.setFontSize(12)
-    doc.setFont('helvetica', 'bold')
-    doc.text('ABTECH', 112, yPosition + 10)
-    
-    yPosition += 25
-    
-    // Modern footer with gradient effect
-    doc.setFillColor(colors.lightBg[0], colors.lightBg[1], colors.lightBg[2])
-    doc.rect(0, yPosition, 210, 15, 'F')
-    
-    doc.setTextColor(colors.text[0], colors.text[1], colors.text[2])
+    // Footer
     doc.setFontSize(8)
     doc.setFont('helvetica', 'italic')
-    doc.text('This document was digitally generated and is legally binding.', 105, yPosition + 8, { align: 'center' })
+    doc.text('This document was digitally generated and is legally binding.', 105, yPosition, { align: 'center' })
     
     // Generate filename
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)
