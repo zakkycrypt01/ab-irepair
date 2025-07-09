@@ -9,7 +9,7 @@ interface OrderData {
   customerInfo: {
     name: string
     email: string
-    phone?: string
+    phone: string
     address: string
     city: string
     country: string
@@ -23,11 +23,17 @@ interface OrderData {
   }[]
   totalPrice: number
   orderDate: string
+  paymentInfo: {
+    transferId: string
+    paymentMethod: string
+    paymentStatus?: string
+  }
   status: string
 }
 
 export default function ThankYouPage() {
   const [orderData, setOrderData] = useState<OrderData | null>(null)
+  const [showDownloadNotification, setShowDownloadNotification] = useState(false)
 
   useEffect(() => {
     // Get order data from localStorage
@@ -36,6 +42,14 @@ export default function ThankYouPage() {
       try {
         const parsedOrder = JSON.parse(lastOrder)
         setOrderData(parsedOrder)
+        
+        // Auto-download receipt after successful order placement
+        setTimeout(() => {
+          handleDownloadReceipt(parsedOrder)
+          setShowDownloadNotification(true)
+          // Hide notification after 5 seconds
+          setTimeout(() => setShowDownloadNotification(false), 5000)
+        }, 2000) // Wait 2 seconds before auto-download
       } catch (error) {
         console.error('Error parsing order data:', error)
       }
@@ -46,16 +60,17 @@ export default function ThankYouPage() {
     window.print()
   }
 
-  const handleDownloadReceipt = () => {
-    if (!orderData) return
+  const handleDownloadReceipt = (order?: OrderData) => {
+    const orderToUse = order || orderData
+    if (!orderToUse) return
     
-    const receiptContent = generateReceiptContent(orderData)
+    const receiptContent = generateReceiptContent(orderToUse)
     const blob = new Blob([receiptContent], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
     
     const a = document.createElement('a')
     a.href = url
-    a.download = `ABTECH_Receipt_${orderData.orderId}.txt`
+    a.download = `ABTECH_Receipt_${orderToUse.orderId}.txt`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -77,7 +92,7 @@ CUSTOMER INFORMATION:
 -------------------------------------
 Name: ${order.customerInfo.name}
 Email: ${order.customerInfo.email}
-${order.customerInfo.phone ? `Phone: ${order.customerInfo.phone}` : ''}
+Phone: ${order.customerInfo.phone}
 
 SHIPPING ADDRESS:
 -------------------------------------
@@ -85,21 +100,27 @@ ${order.customerInfo.address}
 ${order.customerInfo.city}, ${order.customerInfo.country}
 ${order.customerInfo.zipCode}
 
+PAYMENT INFORMATION:
+-------------------------------------
+Method: ${order.paymentInfo.paymentMethod}
+Transfer ID: ${order.paymentInfo.transferId}
+Status: ${order.paymentInfo.paymentStatus || 'Pending Verification'}
+
 ITEMS ORDERED:
 -------------------------------------
 `
     
     order.items.forEach((item, index) => {
       content += `${index + 1}. ${item.name}
-   Price: $${item.price.toFixed(2)}
+   Price: ₦${item.price.toFixed(2)}
    Quantity: ${item.quantity}
-   Subtotal: $${(item.price * item.quantity).toFixed(2)}
+   Subtotal: ₦${(item.price * item.quantity).toFixed(2)}
 
 `
     })
     
     content += `-------------------------------------
-TOTAL: $${order.totalPrice.toFixed(2)}
+TOTAL: ₦${order.totalPrice.toFixed(2)}
 =====================================
 
 Thank you for your order!
@@ -127,6 +148,12 @@ Contact: info@abtech-irepair.com
               <p className="text-gray-300 mb-6 print:text-gray-600">
                 Your order has been successfully placed. We'll process it shortly and send you a confirmation email.
               </p>
+              
+              {showDownloadNotification && (
+                <div className="bg-green-600 text-white p-3 rounded-lg mb-6 print:hidden">
+                  <p className="text-sm">✅ Receipt has been automatically downloaded to your device!</p>
+                </div>
+              )}
             </div>
 
             {orderData && (
@@ -146,8 +173,18 @@ Contact: info@abtech-irepair.com
                       <h3 className="font-semibold mb-2 print:text-black">Customer Information</h3>
                       <p className="text-sm text-gray-300 print:text-gray-600">{orderData.customerInfo.name}</p>
                       <p className="text-sm text-gray-300 print:text-gray-600">{orderData.customerInfo.email}</p>
+                      <p className="text-sm text-gray-300 print:text-gray-600">{orderData.customerInfo.phone}</p>
                       <p className="text-sm text-gray-300 print:text-gray-600">{orderData.customerInfo.address}</p>
                       <p className="text-sm text-gray-300 print:text-gray-600">{orderData.customerInfo.city}, {orderData.customerInfo.country} {orderData.customerInfo.zipCode}</p>
+                    </div>
+                  </div>
+
+                  <div className="mb-6">
+                    <h3 className="font-semibold mb-2 print:text-black">Payment Information</h3>
+                    <div className="bg-gray-600 rounded p-3 print:bg-gray-200">
+                      <p className="text-sm text-gray-300 print:text-gray-600">Method: {orderData.paymentInfo.paymentMethod}</p>
+                      <p className="text-sm text-gray-300 print:text-gray-600">Transfer ID: {orderData.paymentInfo.transferId}</p>
+                      <p className="text-sm text-gray-300 print:text-gray-600">Status: {orderData.paymentInfo.paymentStatus || 'Pending Verification'}</p>
                     </div>
                   </div>
 
@@ -161,8 +198,8 @@ Contact: info@abtech-irepair.com
                             <p className="text-sm text-gray-400 print:text-gray-600">Quantity: {item.quantity}</p>
                           </div>
                           <div className="text-right">
-                            <p className="font-medium print:text-black">${(item.price * item.quantity).toFixed(2)}</p>
-                            <p className="text-sm text-gray-400 print:text-gray-600">${item.price.toFixed(2)} each</p>
+                            <p className="font-medium print:text-black">₦{(item.price * item.quantity).toFixed(2)}</p>
+                            <p className="text-sm text-gray-400 print:text-gray-600">₦{item.price.toFixed(2)} each</p>
                           </div>
                         </div>
                       ))}
@@ -170,7 +207,7 @@ Contact: info@abtech-irepair.com
                   </div>
 
                   <div className="text-right border-t border-gray-600 pt-4 print:border-gray-300">
-                    <p className="text-2xl font-bold print:text-black">Total: ${orderData.totalPrice.toFixed(2)}</p>
+                    <p className="text-2xl font-bold print:text-black">Total: ₦{orderData.totalPrice.toFixed(2)}</p>
                   </div>
                 </div>
 
@@ -184,7 +221,7 @@ Contact: info@abtech-irepair.com
                   </button>
                   
                   <button
-                    onClick={handleDownloadReceipt}
+                    onClick={() => handleDownloadReceipt()}
                     className="flex items-center justify-center bg-purple-600 text-white px-6 py-3 rounded-md hover:bg-purple-700 transition duration-150 ease-in-out"
                   >
                     <Download className="mr-2 h-5 w-5" />

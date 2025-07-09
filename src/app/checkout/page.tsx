@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ChevronLeft, CreditCard, Loader2 } from 'lucide-react'
+import { ChevronLeft, Banknote, Loader2 } from 'lucide-react'
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
@@ -19,13 +19,12 @@ interface CartItem {
 interface FormData {
   name: string;
   email: string;
+  phone: string;
   address: string;
   city: string;
   country: string;
   zipCode: string;
-  cardNumber: string;
-  expiryDate: string;
-  cvv: string;
+  paymentTransferId: string;
 }
 
 export default function CheckoutPage() {
@@ -36,13 +35,12 @@ export default function CheckoutPage() {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
+    phone: '',
     address: '',
     city: '',
     country: '',
     zipCode: '',
-    cardNumber: '',
-    expiryDate: '',
-    cvv: ''
+    paymentTransferId: ''
   })
 
   useEffect(() => {
@@ -71,6 +69,7 @@ export default function CheckoutPage() {
         customerInfo: {
           name: formData.name,
           email: formData.email,
+          phone: formData.phone,
           address: formData.address,
           city: formData.city,
           country: formData.country,
@@ -78,7 +77,11 @@ export default function CheckoutPage() {
         },
         items: cart,
         totalPrice: totalPrice,
-        orderDate: new Date().toISOString()
+        orderDate: new Date().toISOString(),
+        paymentInfo: {
+          transferId: formData.paymentTransferId,
+          paymentMethod: 'Bank Transfer'
+        }
       }
 
       // Submit order to server
@@ -128,10 +131,10 @@ export default function CheckoutPage() {
                     <h3 className="font-semibold">{item.name}</h3>
                     <p className="text-sm text-gray-400">Quantity: {item.quantity}</p>
                   </div>
-                  <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                  <p className="font-semibold">₦{(item.price * item.quantity).toFixed(2)}</p>
                 </div>
               ))}
-              <div className="text-xl font-bold mt-4">Total: ${totalPrice.toFixed(2)}</div>
+              <div className="text-xl font-bold mt-4">Total: ₦{totalPrice.toFixed(2)}</div>
             </div>
 
             <div>
@@ -225,45 +228,42 @@ export default function CheckoutPage() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="cardNumber">Card Number</Label>
+                  <Label htmlFor="phone">Phone Number</Label>
                   <Input 
-                    type="text" 
-                    id="cardNumber" 
-                    name="cardNumber" 
-                    value={formData.cardNumber} 
+                    type="tel" 
+                    id="phone" 
+                    name="phone" 
+                    value={formData.phone} 
                     onChange={handleInputChange} 
                     required 
                     className="bg-gray-800 border-gray-700"
-                    placeholder="1234 5678 9012 3456"
+                    placeholder="+2348123456789"
                     disabled={isLoading}
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="expiryDate">Expiry Date</Label>
-                    <Input 
-                      type="text" 
-                      id="expiryDate" 
-                      name="expiryDate" 
-                      value={formData.expiryDate} 
-                      onChange={handleInputChange} 
-                      required 
-                      placeholder="MM/YY" 
-                      className="bg-gray-800 border-gray-700"
-                      disabled={isLoading}
-                    />
+                
+                <div className="bg-gray-700 p-4 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-3">Payment Information</h3>
+                  <p className="text-sm text-gray-300 mb-3">
+                    Please make your payment via bank transfer and enter the transfer ID below:
+                  </p>
+                  <div className="bg-gray-800 p-3 rounded text-sm mb-3">
+                    <p><strong>Bank Details:</strong></p>
+                    <p>Account Name: Haliru Bamidele Abdullahi</p>
+                    <p>Account Number: 1404116030</p>
+                    <p>Bank: Access Bank</p>
                   </div>
                   <div>
-                    <Label htmlFor="cvv">CVV</Label>
+                    <Label htmlFor="paymentTransferId">Payment Transfer ID</Label>
                     <Input 
                       type="text" 
-                      id="cvv" 
-                      name="cvv" 
-                      value={formData.cvv} 
+                      id="paymentTransferId" 
+                      name="paymentTransferId" 
+                      value={formData.paymentTransferId} 
                       onChange={handleInputChange} 
                       required 
                       className="bg-gray-800 border-gray-700"
-                      placeholder="123"
+                      placeholder="Enter your bank transfer reference ID"
                       disabled={isLoading}
                     />
                   </div>
@@ -280,7 +280,7 @@ export default function CheckoutPage() {
                     </>
                   ) : (
                     <>
-                      <CreditCard className="mr-2" />
+                      <Banknote className="mr-2" />
                       Place Order
                     </>
                   )}

@@ -8,7 +8,7 @@ const orderSchema = new Schema({
     customerInfo: {
         name: {type: String, required: true},
         email: {type: String, required: true},
-        phone: {type: String},
+        phone: {type: String, required: true},
         address: {type: String, required: true},
         city: {type: String, required: true},
         country: {type: String, required: true},
@@ -22,6 +22,11 @@ const orderSchema = new Schema({
     }],
     totalPrice: {type: Number, required: true},
     orderDate: {type: Date, required: true},
+    paymentInfo: {
+        transferId: {type: String, required: true},
+        paymentMethod: {type: String, default: 'Bank Transfer'},
+        paymentStatus: {type: String, default: 'pending', enum: ['pending', 'verified', 'failed']}
+    },
     status: {type: String, default: 'pending', enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled']}
 }, {
     timestamps: true

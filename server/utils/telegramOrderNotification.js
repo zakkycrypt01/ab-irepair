@@ -58,7 +58,7 @@ class TelegramOrderNotificationService {
      * @returns {string} - Formatted message
      */
     static formatOrderMessage(orderData) {
-        const { customerInfo, items, totalPrice, orderDate, orderId } = orderData;
+        const { customerInfo, items, totalPrice, orderDate, orderId, paymentInfo } = orderData;
         
         let message = `🛒 <b>New Order Received!</b>\n\n`;
         
@@ -79,21 +79,29 @@ class TelegramOrderNotificationService {
         message += `• Country: ${customerInfo.country}\n`;
         message += `• ZIP Code: ${customerInfo.zipCode}\n\n`;
         
+        // Payment information
+        if (paymentInfo) {
+            message += `💳 <b>Payment Information:</b>\n`;
+            message += `• Method: ${paymentInfo.paymentMethod || 'Bank Transfer'}\n`;
+            message += `• Transfer ID: ${paymentInfo.transferId}\n`;
+            message += `• Status: ${paymentInfo.paymentStatus || 'Pending Verification'}\n\n`;
+        }
+        
         // Order items
         message += `📦 <b>Items Ordered:</b>\n`;
         items.forEach((item, index) => {
             message += `${index + 1}. ${item.name}\n`;
-            message += `   • Price: $${item.price.toFixed(2)}\n`;
+            message += `   • Price: ₦${item.price.toFixed(2)}\n`;
             message += `   • Quantity: ${item.quantity}\n`;
-            message += `   • Subtotal: $${(item.price * item.quantity).toFixed(2)}\n\n`;
+            message += `   • Subtotal: ₦${(item.price * item.quantity).toFixed(2)}\n\n`;
         });
         
         // Total
-        message += `💰 <b>Total Amount: $${totalPrice.toFixed(2)}</b>\n\n`;
+        message += `💰 <b>Total Amount: ₦${totalPrice.toFixed(2)}</b>\n\n`;
         
         // Footer
         message += `🏪 <i>ABTECH iREPAIR</i>\n`;
-        message += `📞 Please contact the customer to confirm the order.`;
+        message += `📞 Please verify the payment transfer ID and confirm the order.`;
         
         return message;
     }

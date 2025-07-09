@@ -12,12 +12,13 @@ This update adds comprehensive order management and Telegram bot integration to 
 
 ### 2. Telegram Bot Integration
 - **Automatic Notifications**: Orders are automatically sent to Telegram admins
-- **Rich Order Details**: Includes customer info, items, and total price
+- **Rich Order Details**: Includes customer info, items, total price, and payment information
+- **Payment Verification**: Shows bank transfer ID for payment verification
 - **HTML Formatting**: Clean, readable order notifications
 - **Error Handling**: Order processing continues even if Telegram notification fails
 
 ### 3. Receipt Generation & Printing
-- **Digital Receipt**: Comprehensive receipt displayed on thank you page
+- **Digital Receipt**: Comprehensive receipt with payment information displayed on thank you page
 - **Print Function**: Print-optimized receipt with proper styling
 - **Download Option**: Download receipt as text file
 - **Order Storage**: Order data stored in localStorage for receipt display
@@ -25,11 +26,18 @@ This update adds comprehensive order management and Telegram bot integration to 
 ## How It Works
 
 ### Order Flow
-1. Customer places order on checkout page
-2. Order is saved to database with unique ID
-3. Telegram notification sent to admin users
+1. Customer places order on checkout page with bank transfer details
+2. Order is saved to database with unique ID and payment transfer ID
+3. Telegram notification sent to admin users with payment information
 4. Customer redirected to thank you page with receipt
 5. Receipt can be printed or downloaded
+6. Admin can verify payment using the transfer ID
+
+### Payment System
+- **Bank Transfer Only**: No credit card information is stored
+- **Transfer ID Required**: Customers must provide bank transfer reference ID
+- **Payment Verification**: Payment status can be updated by admin
+- **Secure Processing**: No sensitive payment data stored in system
 
 ### Telegram Notification Format
 ```
@@ -41,13 +49,18 @@ This update adds comprehensive order management and Telegram bot integration to 
 👤 Customer Information:
 • Name: [customer-name]
 • Email: [customer-email]
-• Phone: [phone-if-provided]
+• Phone: [phone-number]
 
 📍 Shipping Address:
 • Address: [full-address]
 • City: [city]
 • Country: [country]
 • ZIP Code: [zip-code]
+
+💳 Payment Information:
+• Method: Bank Transfer
+• Transfer ID: [bank-transfer-id]
+• Status: Pending Verification
 
 📦 Items Ordered:
 1. [item-name]
@@ -58,7 +71,7 @@ This update adds comprehensive order management and Telegram bot integration to 
 💰 Total Amount: $[total]
 
 🏪 ABTECH iREPAIR
-📞 Please contact the customer to confirm the order.
+📞 Please verify the payment transfer ID and confirm the order.
 ```
 
 ## Setup Instructions
@@ -97,6 +110,7 @@ npm run dev
   "customerInfo": {
     "name": "John Doe",
     "email": "john@example.com",
+    "phone": "+1234567890",
     "address": "123 Main St",
     "city": "New York",
     "country": "USA",
@@ -111,7 +125,12 @@ npm run dev
     }
   ],
   "totalPrice": 999.99,
-  "orderDate": "2025-01-09T10:30:00Z"
+  "orderDate": "2025-01-09T10:30:00Z",
+  "paymentInfo": {
+    "transferId": "TXN123456789",
+    "paymentMethod": "Bank Transfer",
+    "paymentStatus": "pending"
+  }
 }
 ```
 

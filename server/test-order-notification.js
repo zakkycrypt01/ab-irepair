@@ -25,28 +25,33 @@ async function testOrderNotification() {
         customerInfo: {
             name: 'John Doe',
             email: 'john.doe@example.com',
-            phone: '+1234567890',
-            address: '123 Test Street',
-            city: 'Test City',
-            country: 'Test Country',
-            zipCode: '12345'
+            phone: '+2348123456789',
+            address: '123 Test Street, Victoria Island',
+            city: 'Lagos',
+            country: 'Nigeria',
+            zipCode: '101001'
         },
         items: [
             {
                 productId: 'TEST_PRODUCT_1',
                 name: 'Test Product 1',
-                price: 99.99,
+                price: 15000,
                 quantity: 2
             },
             {
                 productId: 'TEST_PRODUCT_2',
                 name: 'Test Product 2',
-                price: 149.99,
+                price: 25000,
                 quantity: 1
             }
         ],
-        totalPrice: 349.97,
-        orderDate: new Date().toISOString()
+        totalPrice: 55000,
+        orderDate: new Date().toISOString(),
+        paymentInfo: {
+            transferId: 'TXN_TEST_' + Date.now(),
+            paymentMethod: 'Bank Transfer',
+            paymentStatus: 'pending'
+        }
     };
 
     console.log('📦 Sending test order notification...');

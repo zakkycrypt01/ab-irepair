@@ -76,6 +76,7 @@ class UserController{
                 items: orderData.items,
                 totalPrice: orderData.totalPrice,
                 orderDate: orderData.orderDate,
+                paymentInfo: orderData.paymentInfo,
                 status: 'pending'
             });
 
@@ -86,7 +87,8 @@ class UserController{
                     customerInfo: orderData.customerInfo,
                     items: orderData.items,
                     totalPrice: orderData.totalPrice,
-                    orderDate: orderData.orderDate
+                    orderDate: orderData.orderDate,
+                    paymentInfo: orderData.paymentInfo
                 };
                 
                 await TelegramOrderNotificationService.sendOrderNotification(notificationData);
@@ -101,6 +103,7 @@ class UserController{
                 items: newOrder.items,
                 totalPrice: newOrder.totalPrice,
                 orderDate: newOrder.orderDate,
+                paymentInfo: newOrder.paymentInfo,
                 status: newOrder.status
             };
             
