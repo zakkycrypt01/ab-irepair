@@ -2,6 +2,7 @@ import TelegramBot from 'node-telegram-bot-api';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { v4 as uuidv4 } from 'uuid';
 import UserController from '../controllers/user.controller.js';
 import CloudinaryService from '../utils/cloudinaryService.js';
 import TelegramImageHandler from '../utils/telegramImageHandler.js';
@@ -494,7 +495,7 @@ The product has been added to your inventory!
     }
 
     generateProductId() {
-        return 'PROD_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5).toUpperCase();
+        return uuidv4();
     }
 
     splitMessage(message, maxLength) {
