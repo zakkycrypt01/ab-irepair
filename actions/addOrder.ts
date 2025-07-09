@@ -21,6 +21,12 @@ export const addOrder = async (order: any) => {
         
         const result = await response.json();
         console.log('result :>> ', result);
+        
+        // Store order data in localStorage for receipt display
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('lastOrder', JSON.stringify(result));
+        }
+        
         return result;
     } catch (error) {
         console.error('Error adding order:', error);

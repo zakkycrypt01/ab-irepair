@@ -21,6 +21,8 @@ userRouter.use('/bot', botWebhookHandler);
 userRouter
     .post('/addproduct', UserController.HttpAddProduct)
     .post('/addorder', UserController.HttpsAddOrder)
+    .get('/orders', UserController.HttpGetAllOrders)
+    .get('/orders/:orderId', UserController.HttpGetOrderById)
     .get('/products', UserController.HttpGetAllProducts)
     .get('/products/:name', UserController.HttpGetProductByName)
     .delete('/products/:productId', UserController.HttpDeleteProductByproductId);

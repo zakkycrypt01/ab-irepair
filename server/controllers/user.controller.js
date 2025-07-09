@@ -1,6 +1,8 @@
 import {StatusCodes} from 'http-status-codes';
 import Product from '../models/productDB.js';
 import Order from '../models/orderDB.js';
+import TelegramOrderNotificationService from '../utils/telegramOrderNotification.js';
+import { v4 as uuidv4 } from 'uuid';
 
 class UserController{
     static async HttpAddProduct(request, response){
@@ -64,19 +66,81 @@ class UserController{
 
     static async HttpsAddOrder(request, response){
         try {
-            const {productId, name, price, quantity} = request.body;
-            const newOrder = await Order.create({productId, name, price, quantity});
-            const data = {
-                productId: newOrder.productId,
-                name: newOrder.name,
-                price: newOrder.price,
-                quantity: newOrder.quantity,
+            const orderData = request.body;
+            const orderId = uuidv4();
+            
+            // Create order in database
+            const newOrder = await Order.create({
+                orderId,
+                customerInfo: orderData.customerInfo,
+                items: orderData.items,
+                totalPrice: orderData.totalPrice,
+                orderDate: orderData.orderDate,
+                status: 'pending'
+            });
+
+            // Send notification to Telegram
+            try {
+                const notificationData = {
+                    orderId,
+                    customerInfo: orderData.customerInfo,
+                    items: orderData.items,
+                    totalPrice: orderData.totalPrice,
+                    orderDate: orderData.orderDate
+                };
+                
+                await TelegramOrderNotificationService.sendOrderNotification(notificationData);
+            } catch (telegramError) {
+                console.error('Failed to send Telegram notification:', telegramError);
+                // Don't fail the order if Telegram notification fails
             }
-            response.status(StatusCodes.CREATED).json(data);
+
+            const responseData = {
+                orderId: newOrder.orderId,
+                customerInfo: newOrder.customerInfo,
+                items: newOrder.items,
+                totalPrice: newOrder.totalPrice,
+                orderDate: newOrder.orderDate,
+                status: newOrder.status
+            };
+            
+            response.status(StatusCodes.CREATED).json(responseData);
         } catch (error) {
             console.error('Error adding order:', error);
             response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
                 error: 'Failed to add order' 
+            });
+        }
+    }
+
+    static async HttpGetAllOrders(request, response){
+        try {
+            const orders = await Order.find().sort({ createdAt: -1 });
+            response.status(StatusCodes.OK).json(orders);
+        } catch (error) {
+            console.error('Error getting orders:', error);
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
+                error: 'Failed to get orders' 
+            });
+        }
+    }
+
+    static async HttpGetOrderById(request, response){
+        try {
+            const orderId = request.params.orderId;
+            const order = await Order.findOne({ orderId });
+            
+            if (!order) {
+                return response.status(StatusCodes.NOT_FOUND).json({ 
+                    error: 'Order not found' 
+                });
+            }
+            
+            response.status(StatusCodes.OK).json(order);
+        } catch (error) {
+            console.error('Error getting order by ID:', error);
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
+                error: 'Failed to get order' 
             });
         }
     }

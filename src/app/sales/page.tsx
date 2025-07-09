@@ -54,26 +54,35 @@ export default function SalesPage() {
   const addToCart = (product: Product) => {
     setCart((prevCart: CartItem[]) => {
       const existingItem = prevCart.find(item => item.productId === product.productId)
+      let newCart: CartItem[]
       if (existingItem) {
-        return prevCart.map(item => 
+        newCart = prevCart.map(item => 
           item.productId === product.productId ? { ...item, quantity: item.quantity + 1 } : item
         )
       } else {
-        return [...prevCart, { ...product, quantity: 1 }]
+        newCart = [...prevCart, { ...product, quantity: 1 }]
       }
+      localStorage.setItem('cart', JSON.stringify(newCart))
+      return newCart
     })
   }
 
   const removeFromCart = (productId: number) => {
-    setCart(prevCart => prevCart.filter(item => item.productId !== productId))
+    setCart(prevCart => {
+      const newCart = prevCart.filter(item => item.productId !== productId)
+      localStorage.setItem('cart', JSON.stringify(newCart))
+      return newCart
+    })
   }
 
   const updateQuantity = (productId: number, quantity: number) => {
-    setCart(prevCart => 
-      prevCart.map(item =>
+    setCart(prevCart => {
+      const newCart = prevCart.map(item =>
         item.productId === productId ? { ...item, quantity : quantity } : item
       )
-    )
+      localStorage.setItem('cart', JSON.stringify(newCart))
+      return newCart
+    })
   }
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0)
@@ -164,7 +173,7 @@ export default function SalesPage() {
                 <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
                 <p className="text-gray-400 text-sm mb-4">{product.description}</p>
                 <div className="flex justify-between items-center">
-                  <span className="text-2xl font-bold"># {product.price.toFixed(2)}</span>
+                  <span className="text-2xl font-bold">${product.price.toFixed(2)}</span>
                   <button 
                   onClick={()=> addToCart(product)}
                   className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-150 ease-in-out">

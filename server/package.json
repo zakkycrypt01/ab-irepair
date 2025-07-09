@@ -17,7 +17,8 @@
     "dev": "nodemon server.js",
     "start": "node server.js",
     "setup-bot": "node setup-bot.js",
-    "test-bot": "node test-bot.js"
+    "test-bot": "node test-bot.js",
+    "test-order-notification": "node test-order-notification.js"
   },
   "dependencies": {
     "axios": "^1.7.9",
