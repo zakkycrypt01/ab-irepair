@@ -1,6 +1,8 @@
 import {Router} from 'express';
 import UserController from '../controllers/user.controller.js';
 import { get } from 'http';
+import botWebhookHandler from '../bot/webhookHandler.js';
+
 const userRouter = Router();
 
 // Health check endpoint
@@ -12,6 +14,9 @@ userRouter.get('/health', (req, res) => {
         cors: 'enabled'
     });
 });
+
+// Bot webhook routes
+userRouter.use('/bot', botWebhookHandler);
 
 userRouter
     .post('/addproduct', UserController.HttpAddProduct)

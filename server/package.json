@@ -10,19 +10,24 @@
   "type": "module",
   "main": "app.js",
   "directories": {
-    "test":"test"
+    "test": "test"
   },
   "scripts": {
     "test": "jest",
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "setup-bot": "node setup-bot.js",
+    "test-bot": "node test-bot.js"
   },
   "dependencies": {
     "axios": "^1.7.9",
+    "cloudinary": "^2.7.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "http-status-codes": "^2.3.0",
-    "mongoose": "^8.9.6"
+    "mongoose": "^8.9.6",
+    "multer": "^2.0.1",
+    "node-telegram-bot-api": "^0.66.0"
   }
 }
