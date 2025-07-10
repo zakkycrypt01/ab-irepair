@@ -13,15 +13,15 @@ import jsPDF from 'jspdf'
 export default function DeviceRegistrationPage() {
   const [formData, setFormData] = useState({
     ownerName: "",
-    ownerPhone: "",
+    ownerDevice: "",
     date: new Date().toISOString().split("T")[0],
-    phoneBrand: "",
-    phoneModel: "",
-    phoneSerialNumber: "",
-    phoneProblem: "",
-    phoneBatteryType: "",
-    phoneBatteryBrand: "",
-    phoneColor: "",
+    deviceBrand: "",
+    deviceModel: "",
+    deviceSerialNumber: "",
+    deviceProblem: "",
+    deviceBatteryType: "",
+    deviceBatteryBrand: "",
+    deviceColor: "",
     customerSignature: "",
     agreeToTerms: false,
   })
@@ -43,7 +43,7 @@ export default function DeviceRegistrationPage() {
     doc.setTextColor(0, 0, 0)
     doc.setFontSize(18)
     doc.setFont('helvetica', 'bold')
-    doc.text('ABTECH - Phone Repair Agreement', 20, yPosition)
+    doc.text('ABTECH - Device Repair Agreement', 20, yPosition)
     yPosition += 15
     
     // Document info
@@ -75,26 +75,26 @@ export default function DeviceRegistrationPage() {
     // Customer Information
     addSectionHeader('Customer Information')
     addField('Name:', data.ownerName)
-    addField('Phone:', data.ownerPhone)
+    addField('Device:', data.ownerDevice)
     addField('Date:', data.date)
     
     // Device Information
     addSectionHeader('Device Information')
-    addField('Brand:', data.phoneBrand)
-    addField('Model:', data.phoneModel)
-    addField('Serial Number:', data.phoneSerialNumber)
-    addField('Color:', data.phoneColor)
+    addField('Brand:', data.deviceBrand)
+    addField('Model:', data.deviceModel)
+    addField('Serial Number:', data.deviceSerialNumber)
+    addField('Color:', data.deviceColor)
     
     // Battery Information
     addSectionHeader('Battery Information')
-    addField('Type:', data.phoneBatteryType)
-    addField('Brand:', data.phoneBatteryBrand)
+    addField('Type:', data.deviceBatteryType)
+    addField('Brand:', data.deviceBatteryBrand)
     
     // Problem Description
     addSectionHeader('Problem Description')
     doc.setFontSize(10)
     doc.setFont('helvetica', 'normal')
-    const problemLines = doc.splitTextToSize(data.phoneProblem, 170)
+    const problemLines = doc.splitTextToSize(data.deviceProblem, 170)
     doc.text(problemLines, 20, yPosition)
     yPosition += problemLines.length * 4 + 5
     
@@ -104,13 +104,13 @@ export default function DeviceRegistrationPage() {
     doc.setFont('helvetica', 'normal')
     
     const terms = [
-      '1. We charge 1,000 naira for checking the phone problem and is non-refundable.',
-      '2. It will take us approximately three working days to check the phone and give you result.',
-      '3. After checking the phone, we will notify you about the phone, and you must make payment before we work on the phone.',
-      '4. We do not have any phone component here example IC, PCB etc so it will take a long time for you to get the phone.',
+      '1. We charge 1,000 naira for checking the device problem and is non-refundable.',
+      '2. It will take us approximately three working days to check the device and give you result.',
+      '3. After checking the device, we will notify you about the device, and you must make payment before we work on the device.',
+      '4. We do not have any device component here example IC, PCB etc so it will take a long time for you to get the device.',
       '5. It may take four weeks or less for us to finish the repair, Please bear with us .',
-      '6. On no account should you call us everyday disturbing us about the phone.',
-      '7. We will call you when we are done. We will refund your money if we cannot fix the phone.'
+      '6. On no account should you call us everyday disturbing us about the device.',
+      '7. We will call you when we are done. We will refund your money if we cannot fix the device.'
     ]
     
     terms.forEach((term) => {
@@ -158,21 +158,21 @@ export default function DeviceRegistrationPage() {
 
 👤 Customer Information:
 • Name: ${data.ownerName}
-• Phone: ${data.ownerPhone}
+• Phone: ${data.ownerDevice}
 • Date: ${data.date}
 
 📱 Device Details:
-• Brand: ${data.phoneBrand}
-• Model: ${data.phoneModel}
-• Serial Number: ${data.phoneSerialNumber || 'Not provided'}
-• Color: ${data.phoneColor || 'Not provided'}
+• Brand: ${data.deviceBrand}
+• Model: ${data.deviceModel}
+• Serial Number: ${data.deviceSerialNumber || 'Not provided'}
+• Color: ${data.deviceColor || 'Not provided'}
 
 🔋 Battery Information:
-• Type: ${data.phoneBatteryType || 'Not provided'}
-• Brand: ${data.phoneBatteryBrand || 'Not provided'}
+• Type: ${data.deviceBatteryType || 'Not provided'}
+• Brand: ${data.deviceBatteryBrand || 'Not provided'}
 
 ⚠️ Problem Description:
-${data.phoneProblem}
+${data.deviceProblem}
 
 ✍️ Signatures:
 • Customer: ${data.customerSignature}
@@ -237,15 +237,15 @@ ${data.phoneProblem}
         alert("Device registration submitted successfully and sent to ABTECH! Your agreement slip has been downloaded as PDF.")
         setFormData({
           ownerName: "",
-          ownerPhone: "",
+          ownerDevice: "",
           date: new Date().toISOString().split("T")[0],
-          phoneBrand: "",
-          phoneModel: "",
-          phoneSerialNumber: "",
-          phoneProblem: "",
-          phoneBatteryType: "",
-          phoneBatteryBrand: "",
-          phoneColor: "",
+          deviceBrand: "",
+          deviceModel: "",
+          deviceSerialNumber: "",
+          deviceProblem: "",
+          deviceBatteryType: "",
+          deviceBatteryBrand: "",
+          deviceColor: "",
           customerSignature: "",
           agreeToTerms: false,
         })
@@ -280,7 +280,7 @@ ${data.phoneProblem}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-4">
               <Smartphone className="mr-3 text-blue-400" size={32} />
-              <h1 className="text-3xl font-bold">Phone Repair Agreement Slip</h1>
+              <h1 className="text-3xl font-bold">Device Repair Agreement Slip</h1>
             </div>
           </div>
 
@@ -290,7 +290,7 @@ ${data.phoneProblem}
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="ownerName" className="text-gray-300">
-                    Phone Owner's Name:
+                    Device Owner's Name:
                   </Label>
                   <Input
                     type="text"
@@ -305,18 +305,18 @@ ${data.phoneProblem}
                 </div>
 
                 <div>
-                  <Label htmlFor="ownerPhone" className="text-gray-300">
+                  <Label htmlFor="ownerDevice" className="text-gray-300">
                     Owner's Phone Number:
                   </Label>
                   <Input
                     type="tel"
-                    id="ownerPhone"
-                    name="ownerPhone"
-                    value={formData.ownerPhone}
+                    id="ownerDevice"
+                    name="ownerDevice"
+                    value={formData.ownerDevice}
                     onChange={handleInputChange}
                     required
                     className="bg-slate-700 border-slate-600 text-white mt-1"
-                    placeholder="Enter phone number"
+                    placeholder="Enter whatsapp number"
                   />
                 </div>
 
@@ -336,14 +336,14 @@ ${data.phoneProblem}
                 </div>
 
                 <div>
-                  <Label htmlFor="phoneBrand" className="text-gray-300">
-                    Phone Brand:
+                  <Label htmlFor="deviceBrand" className="text-gray-300">
+                    Device Brand:
                   </Label>
                   <Input
                     type="text"
-                    id="phoneBrand"
-                    name="phoneBrand"
-                    value={formData.phoneBrand}
+                    id="deviceBrand"
+                    name="deviceBrand"
+                    value={formData.deviceBrand}
                     onChange={handleInputChange}
                     required
                     className="bg-slate-700 border-slate-600 text-white mt-1"
@@ -352,14 +352,14 @@ ${data.phoneProblem}
                 </div>
 
                 <div>
-                  <Label htmlFor="phoneModel" className="text-gray-300">
-                    Phone Model:
+                  <Label htmlFor="deviceModel" className="text-gray-300">
+                    Device Model:
                   </Label>
                   <Input
                     type="text"
-                    id="phoneModel"
-                    name="phoneModel"
-                    value={formData.phoneModel}
+                    id="deviceModel"
+                    name="deviceModel"
+                    value={formData.deviceModel}
                     onChange={handleInputChange}
                     required
                     className="bg-slate-700 border-slate-600 text-white mt-1"
@@ -370,14 +370,14 @@ ${data.phoneProblem}
 
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="phoneSerialNumber" className="text-gray-300">
-                    Phone Serial Number:
+                  <Label htmlFor="deviceSerialNumber" className="text-gray-300">
+                    Device Serial Number:
                   </Label>
                   <Input
                     type="text"
-                    id="phoneSerialNumber"
-                    name="phoneSerialNumber"
-                    value={formData.phoneSerialNumber}
+                    id="deviceSerialNumber"
+                    name="deviceSerialNumber"
+                    value={formData.deviceSerialNumber}
                     onChange={handleInputChange}
                     className="bg-slate-700 border-slate-600 text-white mt-1"
                     placeholder="Enter serial number"
@@ -385,14 +385,14 @@ ${data.phoneProblem}
                 </div>
 
                 <div>
-                  <Label htmlFor="phoneBatteryType" className="text-gray-300">
-                    Phone Battery Type:
+                  <Label htmlFor="deviceBatteryType" className="text-gray-300">
+                    Device Battery Type:
                   </Label>
                   <Input
                     type="text"
-                    id="phoneBatteryType"
-                    name="phoneBatteryType"
-                    value={formData.phoneBatteryType}
+                    id="deviceBatteryType"
+                    name="deviceBatteryType"
+                    value={formData.deviceBatteryType}
                     onChange={handleInputChange}
                     className="bg-slate-700 border-slate-600 text-white mt-1"
                     placeholder="e.g., Li-ion, Li-Po, etc."
@@ -400,14 +400,14 @@ ${data.phoneProblem}
                 </div>
 
                 <div>
-                  <Label htmlFor="phoneBatteryBrand" className="text-gray-300">
-                    Phone Battery Brand:
+                  <Label htmlFor="deviceBatteryBrand" className="text-gray-300">
+                    Device Battery Brand:
                   </Label>
                   <Input
                     type="text"
-                    id="phoneBatteryBrand"
-                    name="phoneBatteryBrand"
-                    value={formData.phoneBatteryBrand}
+                    id="deviceBatteryBrand"
+                    name="deviceBatteryBrand"
+                    value={formData.deviceBatteryBrand}
                     onChange={handleInputChange}
                     className="bg-slate-700 border-slate-600 text-white mt-1"
                     placeholder="Enter battery brand"
@@ -415,34 +415,34 @@ ${data.phoneProblem}
                 </div>
 
                 <div>
-                  <Label htmlFor="phoneColor" className="text-gray-300">
-                    Phone Colour:
+                  <Label htmlFor="deviceColor" className="text-gray-300">
+                    Device Colour:
                   </Label>
                   <Input
                     type="text"
-                    id="phoneColor"
-                    name="phoneColor"
-                    value={formData.phoneColor}
+                    id="deviceColor"
+                    name="deviceColor"
+                    value={formData.deviceColor}
                     onChange={handleInputChange}
                     className="bg-slate-700 border-slate-600 text-white mt-1"
-                    placeholder="Enter phone color"
+                    placeholder="Enter Device color"
                   />
                 </div>
               </div>
             </div>
 
             <div>
-              <Label htmlFor="phoneProblem" className="text-gray-300">
-                Phone Problem:
+              <Label htmlFor="deviceProblem" className="text-gray-300">
+                Device Problem:
               </Label>
               <Textarea
-                id="phoneProblem"
-                name="phoneProblem"
-                value={formData.phoneProblem}
+                id="deviceProblem"
+                name="deviceProblem"
+                value={formData.deviceProblem}
                 onChange={handleInputChange}
                 required
                 className="bg-slate-700 border-slate-600 text-white mt-1"
-                placeholder="Describe the problem with your phone"
+                placeholder="Describe the problem with your device"
                 rows={3}
               />
             </div>
@@ -453,37 +453,37 @@ ${data.phoneProblem}
               <div className="space-y-3 text-sm text-gray-300">
                 <div className="flex">
                   <span className="font-semibold mr-2">1.</span>
-                  <span>We charge 1,000 naira for checking the phone problem and is a non refundable.</span>
+                  <span>We charge 1,000 naira for checking the device problem and is a non refundable.</span>
                 </div>
                 <div className="flex">
                   <span className="font-semibold mr-2">2.</span>
-                  <span>It will take us approximately three working days to check the phone and give you result.</span>
+                  <span>It will take us approximately three working days to check the device and give you result.</span>
                 </div>
                 <div className="flex">
                   <span className="font-semibold mr-2">3.</span>
                   <span>
-                    After checking the phone, we will notify you about the phone, and you must make payment before we
-                    work on the phone.
+                    After checking the device, we will notify you about the device, and you must make payment before we
+                    work on the device.
                   </span>
                 </div>
                 <div className="flex">
                   <span className="font-semibold mr-2">4.</span>
                   <span>
-                    We do not have any phone component here example IC, PCB etc so it will take a long time for you to
-                    get the phone.
+                    We do not have any device component here example IC, PCB etc so it will take a long time for you to 
+                    get the device.
                   </span>
                 </div>
                 <div className="flex">
                   <span className="font-semibold mr-2">5.</span>
-                  <span>It may take four weeks or less for us to finish the repair.</span>
+                  <span>It may take four weeks or less for us to finish the repair, please bare with us.</span>
                 </div>
                 <div className="flex">
                   <span className="font-semibold mr-2">6.</span>
-                  <span>On no account should you call us everyday disturbing us about the phone.</span>
+                  <span>On no account should you call us everyday disturbing us about the device.</span>
                 </div>
                 <div className="flex">
                   <span className="font-semibold mr-2">7.</span>
-                  <span>We will call you when we are done. We will refund your money if we cannot fix the phone.</span>
+                  <span>We will call you when we are done. We will refund your money if we cannot fix the device.</span>
                 </div>
               </div>
             </div>
@@ -514,7 +514,7 @@ ${data.phoneProblem}
               </Button>
               
               {/* Download PDF Button - only show if form has essential data */}
-              {formData.ownerName && formData.phoneBrand && formData.phoneModel && formData.phoneProblem && formData.customerSignature && (
+              {formData.ownerName && formData.deviceBrand && formData.deviceModel && formData.deviceProblem && formData.customerSignature && (
                 <Button
                   type="button"
                   onClick={() => generatePDF(formData)}
