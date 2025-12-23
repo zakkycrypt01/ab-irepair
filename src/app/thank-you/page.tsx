@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { CheckCircle, ArrowRight, Home, Printer, Download } from 'lucide-react'
+import jsPDF from 'jspdf'
 
 interface OrderData {
   orderId: string
@@ -64,73 +65,129 @@ export default function ThankYouPage() {
     const orderToUse = order || orderData
     if (!orderToUse) return
     
-    const receiptContent = generateReceiptContent(orderToUse)
-    const blob = new Blob([receiptContent], { type: 'text/plain' })
-    const url = URL.createObjectURL(blob)
+    const doc = new jsPDF()
+    const pageWidth = doc.internal.pageSize.getWidth()
+    const date = new Date(orderToUse.orderDate).toLocaleString()
+    let yPos = 20
     
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `ABTECH_Receipt_${orderToUse.orderId}.txt`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-  }
-
-  const generateReceiptContent = (order: OrderData): string => {
-    const date = new Date(order.orderDate).toLocaleString()
+    // Header
+    doc.setFontSize(20)
+    doc.setFont('helvetica', 'bold')
+    doc.text('ABTECH iREPAIR', pageWidth / 2, yPos, { align: 'center' })
+    yPos += 8
+    doc.setFontSize(14)
+    doc.text('ORDER RECEIPT', pageWidth / 2, yPos, { align: 'center' })
+    yPos += 10
     
-    let content = `
-ABTECH iREPAIR - ORDER RECEIPT
-=====================================
-
-Order ID: ${order.orderId}
-Date: ${date}
-Status: ${order.status.toUpperCase()}
-
-CUSTOMER INFORMATION:
--------------------------------------
-Name: ${order.customerInfo.name}
-Email: ${order.customerInfo.email}
-Phone: ${order.customerInfo.phone}
-
-SHIPPING ADDRESS:
--------------------------------------
-${order.customerInfo.address}
-${order.customerInfo.city}, ${order.customerInfo.country}
-${order.customerInfo.zipCode}
-
-PAYMENT INFORMATION:
--------------------------------------
-Method: ${order.paymentInfo.paymentMethod}
-Transfer ID: ${order.paymentInfo.transferId}
-Status: ${order.paymentInfo.paymentStatus || 'Pending Verification'}
-
-ITEMS ORDERED:
--------------------------------------
-`
+    // Divider line
+    doc.setLineWidth(0.5)
+    doc.line(20, yPos, pageWidth - 20, yPos)
+    yPos += 10
     
-    order.items.forEach((item, index) => {
-      content += `${index + 1}. ${item.name}
-   Price: ₦${item.price.toFixed(2)}
-   Quantity: ${item.quantity}
-   Subtotal: ₦${(item.price * item.quantity).toFixed(2)}
-
-`
+    // Order Info
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    doc.text(`Order ID: ${orderToUse.orderId}`, 20, yPos)
+    doc.text(`Date: ${date}`, pageWidth - 20, yPos, { align: 'right' })
+    yPos += 6
+    doc.text(`Status: ${orderToUse.status.toUpperCase()}`, 20, yPos)
+    yPos += 12
+    
+    // Customer Information Section
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(12)
+    doc.text('CUSTOMER INFORMATION', 20, yPos)
+    yPos += 8
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(10)
+    doc.text(`Name: ${orderToUse.customerInfo.name}`, 20, yPos)
+    yPos += 6
+    doc.text(`Email: ${orderToUse.customerInfo.email}`, 20, yPos)
+    yPos += 6
+    doc.text(`Phone: ${orderToUse.customerInfo.phone}`, 20, yPos)
+    yPos += 12
+    
+    // Shipping Address Section
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(12)
+    doc.text('SHIPPING ADDRESS', 20, yPos)
+    yPos += 8
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(10)
+    doc.text(orderToUse.customerInfo.address, 20, yPos)
+    yPos += 6
+    doc.text(`${orderToUse.customerInfo.city}, ${orderToUse.customerInfo.country}`, 20, yPos)
+    yPos += 6
+    doc.text(orderToUse.customerInfo.zipCode, 20, yPos)
+    yPos += 12
+    
+    // Payment Information Section
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(12)
+    doc.text('PAYMENT INFORMATION', 20, yPos)
+    yPos += 8
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(10)
+    doc.text(`Method: ${orderToUse.paymentInfo.paymentMethod}`, 20, yPos)
+    yPos += 6
+    doc.text(`Transfer ID: ${orderToUse.paymentInfo.transferId}`, 20, yPos)
+    yPos += 6
+    doc.text(`Status: ${orderToUse.paymentInfo.paymentStatus || 'Pending Verification'}`, 20, yPos)
+    yPos += 12
+    
+    // Items Section
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(12)
+    doc.text('ITEMS ORDERED', 20, yPos)
+    yPos += 8
+    
+    // Table Header
+    doc.setFillColor(240, 240, 240)
+    doc.rect(20, yPos - 4, pageWidth - 40, 8, 'F')
+    doc.setFontSize(10)
+    doc.text('Item', 25, yPos)
+    doc.text('Qty', 110, yPos)
+    doc.text('Price', 130, yPos)
+    doc.text('Subtotal', 160, yPos)
+    yPos += 8
+    
+    // Table Items
+    doc.setFont('helvetica', 'normal')
+    orderToUse.items.forEach((item) => {
+      if (yPos > 260) {
+        doc.addPage()
+        yPos = 20
+      }
+      doc.text(item.name.substring(0, 40), 25, yPos)
+      doc.text(item.quantity.toString(), 110, yPos)
+      doc.text(`₦${item.price.toFixed(2)}`, 130, yPos)
+      doc.text(`₦${(item.price * item.quantity).toFixed(2)}`, 160, yPos)
+      yPos += 8
     })
     
-    content += `-------------------------------------
-TOTAL: ₦${order.totalPrice.toFixed(2)}
-=====================================
-
-Thank you for your order!
-We will process it shortly and send you a confirmation email.
-
-ABTECH iREPAIR
-Contact: info@abtech-irepair.com
-`
+    // Divider line
+    yPos += 4
+    doc.line(20, yPos, pageWidth - 20, yPos)
+    yPos += 10
     
-    return content
+    // Total
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(14)
+    doc.text(`TOTAL: ₦${orderToUse.totalPrice.toFixed(2)}`, pageWidth - 20, yPos, { align: 'right' })
+    yPos += 20
+    
+    // Footer
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(10)
+    doc.text('Thank you for your order!', pageWidth / 2, yPos, { align: 'center' })
+    yPos += 6
+    doc.text('We will process it shortly and send you a confirmation email.', pageWidth / 2, yPos, { align: 'center' })
+    yPos += 12
+    doc.setFontSize(9)
+    doc.text('ABTECH iREPAIR | Contact: info@abtech-irepair.com', pageWidth / 2, yPos, { align: 'center' })
+    
+    // Save the PDF
+    doc.save(`ABTECH_Receipt_${orderToUse.orderId}.pdf`)
   }
 
   return (
