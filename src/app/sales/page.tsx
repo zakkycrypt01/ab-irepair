@@ -43,9 +43,29 @@ export default function SalesPage() {
 
   useEffect(() => {
     const getProduct = async () => {
+      // 1. Try to load from cache first for instant feedback
+      const cached = localStorage.getItem('products_cache');
+      if (cached) {
+        try {
+          const parsedCache = JSON.parse(cached);
+          // Optional: Check if cache is too old (e.g. > 1 hour)
+          // For now, we just use it to show something immediately
+          setProducts(parsedCache.data);
+        } catch (e) {
+          console.warn('Failed to parse product cache', e);
+        }
+      }
+
+      // 2. Fetch fresh data
       try {
         const products = await getAllProduct();
         setProducts(products);
+
+        // 3. Update cache
+        localStorage.setItem('products_cache', JSON.stringify({
+          timestamp: Date.now(),
+          data: products
+        }));
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -170,8 +190,8 @@ export default function SalesPage() {
               key={cat.id}
               onClick={() => setActiveTab(cat.id)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${activeTab === cat.id
-                  ? "bg-green-500 text-white border-green-600 shadow-md"
-                  : "bg-card text-muted-foreground border-border hover:border-green-500 hover:text-green-500"
+                ? "bg-green-500 text-white border-green-600 shadow-md"
+                : "bg-card text-muted-foreground border-border hover:border-green-500 hover:text-green-500"
                 }`}
             >
               {cat.label}

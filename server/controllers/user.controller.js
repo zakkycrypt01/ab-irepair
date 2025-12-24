@@ -1,14 +1,21 @@
-import {StatusCodes} from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import Product from '../models/productDB.js';
 import Order from '../models/orderDB.js';
 import TelegramOrderNotificationService from '../utils/telegramOrderNotification.js';
 import { v4 as uuidv4 } from 'uuid';
 
-class UserController{
-    static async HttpAddProduct(request, response){
+class UserController {
+    // Simple in-memory cache
+    static productCache = {
+        data: null,
+        timestamp: 0,
+        TTL: 5 * 60 * 1000 // 5 minutes
+    };
+
+    static async HttpAddProduct(request, response) {
         try {
-            const {productId, name, category, price, description, image} = request.body;
-            const newProduct = await Product.create({productId, name, category, price, description, image});
+            const { productId, name, category, price, description, image } = request.body;
+            const newProduct = await Product.create({ productId, name, category, price, description, image });
             const data = {
                 productId: newProduct.productId,
                 name: newProduct.name,
@@ -18,57 +25,82 @@ class UserController{
                 image: newProduct.image,
             }
             response.status(StatusCodes.CREATED).json(data);
+
+            // Invalidate cache
+            UserController.productCache.data = null;
         } catch (error) {
             console.error('Error adding product:', error);
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
-                error: 'Failed to add product' 
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                error: 'Failed to add product'
             });
         }
     };
 
-    static async HttpGetAllProducts(request, response){
+    static async HttpGetAllProducts(request, response) {
         try {
+            const now = Date.now();
+
+            // Check cache validity
+            if (UserController.productCache.data &&
+                (now - UserController.productCache.timestamp < UserController.productCache.TTL)) {
+
+                response.setHeader('Cache-Control', 'public, max-age=300');
+                response.setHeader('X-Cache', 'HIT');
+                return response.status(StatusCodes.OK).json(UserController.productCache.data);
+            }
+
             const products = await Product.find();
+
+            // Update cache
+            UserController.productCache.data = products;
+            UserController.productCache.timestamp = now;
+
+            response.setHeader('Cache-Control', 'public, max-age=300');
+            response.setHeader('X-Cache', 'MISS');
             response.status(StatusCodes.OK).json(products);
         } catch (error) {
             console.error('Error getting products:', error);
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
-                error: 'Failed to get products' 
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                error: 'Failed to get products'
             });
         }
     }
 
-    static async HttpGetProductByName(request, response){
+    static async HttpGetProductByName(request, response) {
         try {
-            const name = await Product.findOne({name: request.params.name});
+            const name = await Product.findOne({ name: request.params.name });
             response.status(StatusCodes.OK).json(name);
         } catch (error) {
             console.error('Error getting product by name:', error);
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
-                error: 'Failed to get product' 
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                error: 'Failed to get product'
             });
         }
     }
 
     //delete product by id
-    static async HttpDeleteProductByproductId(request, response){
+    static async HttpDeleteProductByproductId(request, response) {
         try {
             const productId = request.params.productId;
-            await Product.findOneAndDelete({productId: productId});
+            await Product.findOneAndDelete({ productId: productId });
+
+            // Invalidate cache
+            UserController.productCache.data = null;
+
             response.status(StatusCodes.NO_CONTENT).send();
         } catch (error) {
             console.error('Error deleting product:', error);
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
-                error: 'Failed to delete product' 
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                error: 'Failed to delete product'
             });
         }
     }
 
-    static async HttpsAddOrder(request, response){
+    static async HttpsAddOrder(request, response) {
         try {
             const orderData = request.body;
             const orderId = uuidv4();
-            
+
             // Create order in database
             const newOrder = await Order.create({
                 orderId,
@@ -90,7 +122,7 @@ class UserController{
                     orderDate: orderData.orderDate,
                     paymentInfo: orderData.paymentInfo
                 };
-                
+
                 await TelegramOrderNotificationService.sendOrderNotification(notificationData);
             } catch (telegramError) {
                 console.error('Failed to send Telegram notification:', telegramError);
@@ -106,44 +138,44 @@ class UserController{
                 paymentInfo: newOrder.paymentInfo,
                 status: newOrder.status
             };
-            
+
             response.status(StatusCodes.CREATED).json(responseData);
         } catch (error) {
             console.error('Error adding order:', error);
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
-                error: 'Failed to add order' 
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                error: 'Failed to add order'
             });
         }
     }
 
-    static async HttpGetAllOrders(request, response){
+    static async HttpGetAllOrders(request, response) {
         try {
             const orders = await Order.find().sort({ createdAt: -1 });
             response.status(StatusCodes.OK).json(orders);
         } catch (error) {
             console.error('Error getting orders:', error);
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
-                error: 'Failed to get orders' 
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                error: 'Failed to get orders'
             });
         }
     }
 
-    static async HttpGetOrderById(request, response){
+    static async HttpGetOrderById(request, response) {
         try {
             const orderId = request.params.orderId;
             const order = await Order.findOne({ orderId });
-            
+
             if (!order) {
-                return response.status(StatusCodes.NOT_FOUND).json({ 
-                    error: 'Order not found' 
+                return response.status(StatusCodes.NOT_FOUND).json({
+                    error: 'Order not found'
                 });
             }
-            
+
             response.status(StatusCodes.OK).json(order);
         } catch (error) {
             console.error('Error getting order by ID:', error);
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
-                error: 'Failed to get order' 
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                error: 'Failed to get order'
             });
         }
     }
