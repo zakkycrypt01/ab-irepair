@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Upload, FileText, User, MapPin, Calendar, Phone, Clock, Shield, CheckCircle } from "lucide-react";
+import Link from 'next/link';
+import { Upload, FileText, User, MapPin, Calendar, Phone, Clock, Shield, CheckCircle, ChevronLeft, Camera } from "lucide-react";
 
 interface FormData {
   [key: string]: string | boolean;
@@ -42,30 +43,38 @@ export default function TraineeRegistrationForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100 py-12 px-4 sm:px-6 lg:px-8 flex justify-center">
-      <div className="w-full max-w-4xl bg-gray-900 shadow-2xl rounded-3xl overflow-hidden border border-gray-800">
+    <div className="min-h-screen bg-background text-foreground py-12 px-4 sm:px-6 lg:px-8 flex justify-center">
+      <div className="w-full max-w-4xl bg-card border border-border shadow-xl rounded-xl overflow-hidden">
+
+        {/* Navigation */}
+        <div className="p-4 border-b border-border">
+          <Link href="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-green-500 transition-colors">
+            <ChevronLeft className="w-4 h-4 mr-1" /> Back to Home
+          </Link>
+        </div>
+
         {/* Header Section */}
-        <div className="bg-gradient-to-r from-blue-900 to-gray-900 p-8 text-center border-b border-gray-800">
-          <h1 className="text-4xl font-extrabold text-white tracking-widest mb-2">ABTECH iREPAIR</h1>
-          <p className="text-blue-200 font-medium">Gk M.M Castle, Opp sch new gate Jatapi office Minna Niger State.</p>
-          <div className="mt-6 inline-block bg-gray-800/50 px-6 py-2 rounded-full border border-blue-500/30">
-            <h2 className="text-xl font-bold text-blue-400 tracking-wide">APPRENTICE REGISTRATION FORM</h2>
+        <div className="bg-muted/30 p-8 text-center border-b border-border">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-2">ABTECH iREPAIR</h1>
+          <p className="text-muted-foreground font-medium mb-6">Gk M.M Castle, Opp sch new gate Jatapi office Minna Niger State.</p>
+          <div className="inline-block bg-primary/10 px-6 py-2 rounded-full border border-primary/20">
+            <h2 className="text-lg font-bold text-primary tracking-wide">APPRENTICE REGISTRATION FORM</h2>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 space-y-8">
+        <form onSubmit={handleSubmit} className="p-8 space-y-10">
 
           {/* Passport Upload Section */}
           <div className="flex flex-col items-center justify-center space-y-4">
             <div className="relative group">
-              <div className={`w-32 h-32 rounded-full border-4 ${passport ? 'border-blue-500' : 'border-gray-700 hover:border-blue-400'} flex items-center justify-center overflow-hidden bg-gray-800 transition-colors duration-300 shadow-lg`}>
+              <div className={`w-32 h-32 rounded-full border-4 ${passport ? 'border-green-500' : 'border-border group-hover:border-green-400'} flex items-center justify-center overflow-hidden bg-muted transition-all duration-300 shadow-lg`}>
                 {passport ? (
                   <img src={passport} alt="Passport" className="w-full h-full object-cover" />
                 ) : (
-                  <CameraIcon className="w-12 h-12 text-gray-500 group-hover:text-blue-400 transition-colors" />
+                  <Camera className="w-10 h-10 text-muted-foreground group-hover:text-green-500 transition-colors" />
                 )}
               </div>
-              <label className="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-500 text-white p-2 rounded-full cursor-pointer shadow-md transition-transform hover:scale-110">
+              <label className="absolute bottom-0 right-0 bg-green-600 hover:bg-green-500 text-white p-2.5 rounded-full cursor-pointer shadow-md transition-transform hover:scale-110">
                 <Upload className="w-4 h-4" />
                 <input
                   type="file"
@@ -82,14 +91,14 @@ export default function TraineeRegistrationForm() {
                 />
               </label>
             </div>
-            <span className="text-sm text-gray-400 font-medium tracking-wide">Upload Passport Photograph</span>
+            <span className="text-sm text-muted-foreground font-medium">Upload Passport Photograph</span>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
 
             {/* Apprentice Details */}
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-300 flex items-center gap-2 border-b border-gray-800 pb-2">
+              <h3 className="text-lg font-semibold flex items-center gap-2 border-b border-border pb-2 text-foreground">
                 <User className="w-5 h-5 text-blue-500" /> Apprentice Details
               </h3>
 
@@ -99,22 +108,27 @@ export default function TraineeRegistrationForm() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <InputField label="Age" type="number" placeholder="Years" onChange={(v) => handleInputChange("Age", v)} />
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Gender</label>
-                    <select
-                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      onChange={e => handleInputChange("Sex", e.target.value)}
-                    >
-                      <option>Select</option>
-                      <option>Male</option>
-                      <option>Female</option>
-                    </select>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Gender</label>
+                    <div className="relative">
+                      <select
+                        className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-green-500 transition-all appearance-none"
+                        onChange={e => handleInputChange("Sex", e.target.value)}
+                      >
+                        <option value="">Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                      </select>
+                      <div className="absolute right-3 top-3.5 pointer-events-none text-muted-foreground">
+                        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <InputField label="State of Origin" placeholder="state" onChange={(v) => handleInputChange("State", v)} />
-                  <InputField label="Nationality" placeholder="Currency" onChange={(v) => handleInputChange("Nationality", v)} />
+                  <InputField label="Nationality" placeholder="Country" onChange={(v) => handleInputChange("Nationality", v)} />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -126,7 +140,7 @@ export default function TraineeRegistrationForm() {
 
             {/* Guarantor Details */}
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-300 flex items-center gap-2 border-b border-gray-800 pb-2">
+              <h3 className="text-lg font-semibold flex items-center gap-2 border-b border-border pb-2 text-foreground">
                 <Shield className="w-5 h-5 text-green-500" /> Guarantor Details
               </h3>
 
@@ -134,23 +148,17 @@ export default function TraineeRegistrationForm() {
                 <InputField
                   label="Guarantor Name"
                   placeholder="Full Name"
-                  borderColor="border-green-500/30"
-                  focusColor="focus:ring-green-500"
                   onChange={(v) => handleInputChange("GuarantorName", v)}
                 />
                 <InputField
                   label="Guarantor Address"
                   placeholder="Full Address"
-                  borderColor="border-green-500/30"
-                  focusColor="focus:ring-green-500"
                   icon={<MapPin className="w-4 h-4" />}
                   onChange={(v) => handleInputChange("GuarantorAddress", v)}
                 />
                 <InputField
                   label="Guarantor Phone"
                   placeholder="Phone Number"
-                  borderColor="border-green-500/30"
-                  focusColor="focus:ring-green-500"
                   icon={<Phone className="w-4 h-4" />}
                   onChange={(v) => handleInputChange("GuarantorPhone", v)}
                 />
@@ -158,10 +166,10 @@ export default function TraineeRegistrationForm() {
 
               {/* Training Schedule Preferences */}
               <div className="mt-8">
-                <h3 className="text-lg font-semibold text-gray-300 flex items-center gap-2 border-b border-gray-800 pb-2 mb-4">
+                <h3 className="text-lg font-semibold flex items-center gap-2 border-b border-border pb-2 mb-4 text-foreground">
                   <Clock className="w-5 h-5 text-purple-500" /> Training Schedule
                 </h3>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-col gap-3">
                   <Checkbox label="Morning (9am - 12pm)" onChange={(c) => handleInputChange("Morning", c)} />
                   <Checkbox label="Afternoon (12pm - 3pm)" onChange={(c) => handleInputChange("Afternoon", c)} />
                   <Checkbox label="Evening (3pm - 6pm)" onChange={(c) => handleInputChange("Evening", c)} />
@@ -171,11 +179,11 @@ export default function TraineeRegistrationForm() {
           </div>
 
           {/* Rules Section */}
-          <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700/50">
-            <h3 className="font-bold text-center text-red-400 mb-4 flex items-center justify-center gap-2">
-              <Shield className="w-4 h-4" /> RULES AND REGULATIONS
+          <div className="bg-red-500/5 rounded-xl p-6 border border-red-500/20">
+            <h3 className="font-bold text-center text-red-600 dark:text-red-400 mb-4 flex items-center justify-center gap-2 uppercase tracking-wide">
+              <Shield className="w-5 h-5" /> Rules and Regulations
             </h3>
-            <ul className="list-disc ml-6 space-y-2 text-sm text-gray-300">
+            <ul className="list-disc ml-6 space-y-2 text-sm text-foreground/80">
               <li>DO NOT steal properties or work equipment belonging to the establishment or teacher.</li>
               <li>Respect and obey all instructions given by the Teacher.</li>
               <li>Maintain professional conduct; fighting or abuse toward the Teacher or customers is strictly prohibited.</li>
@@ -183,26 +191,26 @@ export default function TraineeRegistrationForm() {
           </div>
 
           {/* Signatures */}
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+          <div className="bg-muted/10 border border-border rounded-xl p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
               <SignatureInput label="Guarantor's Signature" onChange={(v) => handleInputChange("GuarantorSign", v)} />
               <SignatureInput label="Apprentice's Signature" onChange={(v) => handleInputChange("ApprenticeSign", v)} />
             </div>
             <div className="flex justify-center">
-              <SignatureInput label="Master's Signature" onChange={(v) => handleInputChange("MasterSign", v)} width="w-64" />
+              <SignatureInput label="Master's Signature" onChange={(v) => handleInputChange("MasterSign", v)} width="w-72" />
             </div>
           </div>
 
           <button
             type="submit"
             disabled={downloading}
-            className={`w-full py-4 rounded-xl font-bold text-lg shadow-xl transition-all duration-300 flex items-center justify-center gap-2
+            className={`w-full py-4 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 flex items-center justify-center gap-2
               ${downloading
-                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white transform hover:translate-y-[-2px]"}`}
+                ? "bg-muted text-muted-foreground cursor-not-allowed"
+                : "bg-green-600 hover:bg-green-700 text-white transform hover:translate-y-[-1px]"}`}
           >
             {downloading ? (
-              <>Processing Request...</>
+              <>Generating PDF...</>
             ) : (
               <>
                 <FileText className="w-5 h-5" /> Submit & Download Registration PDF
@@ -222,23 +230,21 @@ interface InputFieldProps {
   type?: string;
   placeholder?: string;
   icon?: React.ReactNode;
-  borderColor?: string;
-  focusColor?: string;
   onChange: (value: string) => void;
 }
 
-function InputField({ label, type = "text", placeholder, icon, borderColor = "border-gray-700", focusColor = "focus:ring-blue-500", onChange }: InputFieldProps) {
+function InputField({ label, type = "text", placeholder, icon, onChange }: InputFieldProps) {
   return (
-    <div className="flex flex-col gap-1 w-full">
-      <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider ml-1">{label}</label>
-      <div className="relative">
+    <div className="flex flex-col gap-1.5 w-full">
+      <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider ml-1">{label}</label>
+      <div className="relative group">
         <input
           type={type}
           placeholder={placeholder}
-          className={`w-full bg-gray-800 border ${borderColor} rounded-lg px-4 py-3 ${icon ? 'pl-10' : 'pl-4'} text-gray-100 placeholder-gray-600 focus:outline-none focus:ring-2 ${focusColor} focus:border-transparent transition-all`}
+          className={`w-full bg-background border border-border rounded-lg px-4 py-3 ${icon ? 'pl-10' : 'pl-4'} text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all`}
           onChange={(e) => onChange(e.target.value)}
         />
-        {icon && <div className="absolute left-3 top-3.5 text-gray-500">{icon}</div>}
+        {icon && <div className="absolute left-3 top-3.5 text-muted-foreground group-focus-within:text-green-500 transition-colors">{icon}</div>}
       </div>
     </div>
   );
@@ -251,13 +257,13 @@ interface CheckboxProps {
 
 function Checkbox({ label, onChange }: CheckboxProps) {
   return (
-    <label className="flex items-center gap-3 bg-gray-800 px-4 py-3 rounded-lg border border-gray-700 hover:border-blue-500/50 cursor-pointer transition-all group select-none">
+    <label className="flex items-center gap-3 bg-card px-4 py-3 rounded-lg border border-border hover:border-green-500 cursor-pointer transition-all group select-none">
       <div className="relative flex items-center">
         <input type="checkbox" className="peer sr-only" onChange={(e) => onChange(e.target.checked)} />
-        <div className="w-5 h-5 border-2 border-gray-500 rounded peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-all"></div>
-        <CheckCircle className="absolute w-5 h-5 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
+        <div className="w-5 h-5 border-2 border-muted-foreground rounded peer-checked:bg-green-500 peer-checked:border-green-500 transition-all"></div>
+        <CheckCircle className="absolute w-3.5 h-3.5 top-0.5 left-0.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
       </div>
-      <span className="text-gray-300 group-hover:text-white transition-colors text-sm">{label}</span>
+      <span className="text-foreground group-hover:text-green-500 transition-colors text-sm font-medium">{label}</span>
     </label>
   );
 }
@@ -271,22 +277,13 @@ interface SignatureInputProps {
 function SignatureInput({ label, onChange, width = "w-full" }: SignatureInputProps) {
   return (
     <div className={`flex flex-col items-center gap-2 ${width}`}>
-      <span className="text-xs text-gray-500 uppercase tracking-wider">{label} & Date</span>
+      <span className="text-xs text-muted-foreground uppercase tracking-wider">{label} & Date</span>
       <input
         type="text"
-        className="w-full bg-transparent border-b-2 border-gray-700 focus:border-blue-500 px-2 py-1 text-center text-gray-200 outline-none transition-colors font-handwriting"
+        className="w-full bg-transparent border-b-2 border-border focus:border-green-500 px-2 py-1 text-center text-foreground outline-none transition-colors font-handwriting"
         placeholder="Sign here..."
         onChange={(e) => onChange(e.target.value)}
       />
     </div>
   );
-}
-
-function CameraIcon({ className }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
-      <circle cx="12" cy="13" r="3"></circle>
-    </svg>
-  )
 }
